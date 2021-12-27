@@ -27,8 +27,12 @@ class HomeViewController: UIViewController {
     
     private let homeFeedTable: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
+        
+        tableView.separatorStyle = .none
+        
         tableView.register(CollectionViewTableViewCell.self, forCellReuseIdentifier: CollectionViewTableViewCell.identifier)
         tableView.register(HomeSectionHeader.self, forHeaderFooterViewReuseIdentifier: HomeSectionHeader.identifier)
+        
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
