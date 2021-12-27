@@ -7,12 +7,20 @@
 
 import UIKit
 
+enum Sections: Int {
+    case trendingMovies = 0
+    case trendingTVs = 1
+    case popular = 2
+    case upcomingMovies = 3
+    case topRated = 4
+}
+
 class HomeViewController: UIViewController {
     
     let sectionTitles: [String] = [
         "Trending Movies",
-        "Popular",
         "Trending TVs",
+        "Popular",
         "Upcoming Movies",
         "Top Rated"
     ]
@@ -21,6 +29,7 @@ class HomeViewController: UIViewController {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.register(CollectionViewTableViewCell.self, forCellReuseIdentifier: CollectionViewTableViewCell.identifier)
         tableView.register(HomeSectionHeader.self, forHeaderFooterViewReuseIdentifier: HomeSectionHeader.identifier)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
 
@@ -32,6 +41,8 @@ class HomeViewController: UIViewController {
         view.addSubview(homeFeedTable)
         homeFeedTable.delegate = self
         homeFeedTable.dataSource = self
+        
+        applyConstraints()
         
         configureNavigationBar()
         
@@ -56,12 +67,16 @@ class HomeViewController: UIViewController {
         navigationController?.navigationBar.tintColor = .white
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    private func applyConstraints() {
+        let homeFeedTableConstraints = [
+            homeFeedTable.topAnchor.constraint(equalTo: view.topAnchor),
+            homeFeedTable.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            homeFeedTable.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            homeFeedTable.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ]
         
-        homeFeedTable.frame = view.bounds
+        NSLayoutConstraint.activate(homeFeedTableConstraints)
     }
-
 }
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
@@ -84,6 +99,56 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CollectionViewTableViewCell.identifier, for: indexPath) as? CollectionViewTableViewCell else {
+            return UITableViewCell()
+        }
+        
+        switch indexPath.section {
+        case Sections.trendingMovies.rawValue:
+            APICaller.shared.getTrendingMovies { result in
+                switch result {
+                case .success(let titles):
+                    cell.configure(with: titles)
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        case Sections.trendingTVs.rawValue:
+            APICaller.shared.getTrendingTVs { result in
+                switch result {
+                case .success(let titles):
+                    cell.configure(with: titles)
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        case Sections.popular.rawValue:
+            APICaller.shared.getPopular { result in
+                switch result {
+                case .success(let titles):
+                    cell.configure(with: titles)
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        case Sections.upcomingMovies.rawValue:
+            APICaller.shared.getUpcomingMovies { result in
+                switch result {
+                case .success(let titles):
+                    cell.configure(with: titles)
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        case Sections.topRated.rawValue:
+            APICaller.shared.getTopRated { result in
+                switch result {
+                case .success(let titles):
+                    cell.configure(with: titles)
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        default:
             return UITableViewCell()
         }
         
