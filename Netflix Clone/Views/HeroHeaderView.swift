@@ -14,7 +14,7 @@ class HeroHeaderView: UIView {
         
         if #available(iOS 15.0, *) {
             var configuration = UIButton.Configuration.filled()
-            configuration.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 16, bottom: 5, trailing: 16)
+            configuration.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 24, bottom: 12, trailing: 24)
             configuration.baseBackgroundColor = .white
             configuration.title = "Play"
             configuration.baseForegroundColor = .black
@@ -25,7 +25,8 @@ class HeroHeaderView: UIView {
             button.setTitleColor(.black, for: .normal)
         }
         
-        button.layer.cornerRadius = 5
+        button.layer.cornerRadius = 10
+        button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -35,7 +36,7 @@ class HeroHeaderView: UIView {
         
         if #available(iOS 15.0, *) {
             var configuration = UIButton.Configuration.bordered()
-            configuration.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 16, bottom: 5, trailing: 16)
+            configuration.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 24, bottom: 12, trailing: 24)
             configuration.title = "Download"
             configuration.baseForegroundColor = .white
             button.configuration = configuration
@@ -47,7 +48,8 @@ class HeroHeaderView: UIView {
         
         button.layer.borderColor = UIColor.white.cgColor
         button.layer.borderWidth = 1
-        button.layer.cornerRadius = 5
+        button.layer.cornerRadius = 10
+        button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -58,19 +60,48 @@ class HeroHeaderView: UIView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.image = UIImage(named: "heroImage")
+        imageView.image = UIImage(named: "heroImage2")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    private func addGradient() {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.colors = [
+    private let bottomGradientContainerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let bottomGradientLayer: CAGradientLayer = {
+        let layer = CAGradientLayer()
+        layer.colors = [
             UIColor.clear.cgColor,
-            UIColor.systemBackground.cgColor
+            UIColor.black.cgColor
         ]
-        gradientLayer.frame = bounds
-        layer.addSublayer(gradientLayer)
+        layer.locations = [0.5, 1]
+        return layer
+    }()
+    
+    private let topGradientLayer: CAGradientLayer = {
+        let layer = CAGradientLayer()
+        layer.colors = [
+            UIColor.black.cgColor,
+            UIColor.clear.cgColor
+        ]
+        layer.locations = [0, 1]
+        return layer
+    }()
+    
+    private func addGradient() {
+        
+        topGradientLayer.frame = CGRect(x: 0, y: 0, width: bounds.width, height: 150)
+        layer.addSublayer(topGradientLayer)
+        
+        addSubview(bottomGradientContainerView)
+        
+        bottomGradientContainerView.layer.addSublayer(bottomGradientLayer)
+        
+        bottomGradientLayer.frame = self.bounds
+        bottomGradientLayer.frame.origin.y = -bounds.height
     }
     
     override init(frame: CGRect) {
@@ -110,9 +141,18 @@ class HeroHeaderView: UIView {
             buttonsStackView.centerXAnchor.constraint(equalTo: centerXAnchor)
         ]
         
+        let gradientContainerViewConstraints = [
+            bottomGradientContainerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            bottomGradientContainerView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            bottomGradientContainerView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ]
+
+        NSLayoutConstraint.activate(constraints)
+        
         NSLayoutConstraint.activate(heroImageViewConstraints)
         NSLayoutConstraint.activate(playButtonConstraints)
         NSLayoutConstraint.activate(buttonsStackViewConstraints)
+        NSLayoutConstraint.activate(gradientContainerViewConstraints)
     }
     
     required init?(coder: NSCoder) {
@@ -120,3 +160,23 @@ class HeroHeaderView: UIView {
     }
     
 }
+
+#if DEBUG
+import SwiftUI
+struct HeroHeaderViewPreviews: PreviewProvider {
+    static var previews: some View {
+        ContainerPreview()
+            .previewLayout(.fixed(width: 375, height: 450))
+    }
+    
+    struct ContainerPreview: UIViewRepresentable {
+        typealias UIViewControllerType = UIView
+        
+        func makeUIView(context: Context) -> some UIView {
+            return HeroHeaderView(frame: CGRect(x: 0, y: 0, width: 375, height: 450))
+        }
+        
+        func updateUIView(_ uiView: UIViewType, context: Context) {}
+    }
+}
+#endif

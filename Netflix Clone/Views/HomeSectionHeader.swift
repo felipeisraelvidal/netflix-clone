@@ -13,9 +13,8 @@ class HomeSectionHeader: UITableViewHeaderFooterView {
     
     let titleLabel: UILabel = {
         let label = UILabel()
-        
         label.font = .preferredFont(for: .title3, weight: .semibold)
-        label.text = "Section Title"
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

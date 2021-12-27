@@ -17,6 +17,8 @@ enum Sections: Int {
 
 class HomeViewController: UIViewController {
     
+    private let kTableHeaderHeight: CGFloat = 450
+    
     let sectionTitles: [String] = [
         "Trending Movies",
         "Trending TVs",
@@ -25,9 +27,12 @@ class HomeViewController: UIViewController {
         "Top Rated"
     ]
     
+    private var headerView: HeroHeaderView!
+    
     private let homeFeedTable: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         
+        tableView.backgroundColor = .black
         tableView.separatorStyle = .none
         
         tableView.register(CollectionViewTableViewCell.self, forCellReuseIdentifier: CollectionViewTableViewCell.identifier)
@@ -40,7 +45,7 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .black
         
         view.addSubview(homeFeedTable)
         homeFeedTable.delegate = self
@@ -50,8 +55,13 @@ class HomeViewController: UIViewController {
         
         configureNavigationBar()
         
-        let headerView = HeroHeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 450))
-        homeFeedTable.tableHeaderView = headerView
+        headerView = HeroHeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: kTableHeaderHeight))
+        homeFeedTable.tableHeaderView = nil
+        homeFeedTable.addSubview(headerView)
+        homeFeedTable.contentInset = UIEdgeInsets(top: kTableHeaderHeight, left: 0, bottom: 0, right: 0)
+        homeFeedTable.contentOffset = CGPoint(x: 0, y: -kTableHeaderHeight)
+        
+        updateHeaderView()
     }
     
     private func configureNavigationBar() {
@@ -69,6 +79,7 @@ class HomeViewController: UIViewController {
         ]
         
         navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.barStyle = .black
     }
     
     private func applyConstraints() {
@@ -80,6 +91,16 @@ class HomeViewController: UIViewController {
         ]
         
         NSLayoutConstraint.activate(homeFeedTableConstraints)
+    }
+    
+    private func updateHeaderView() {
+        var headerRect = CGRect(x: 0, y: -kTableHeaderHeight, width: view.bounds.width, height: kTableHeaderHeight)
+        if homeFeedTable.contentOffset.y < -kTableHeaderHeight {
+            headerRect.origin.y = homeFeedTable.contentOffset.y
+            headerRect.size.height = -homeFeedTable.contentOffset.y
+        }
+        
+        headerView.frame = headerRect
     }
 }
 
@@ -168,6 +189,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         let offset = scrollView.contentOffset.y + defaultOffset
         
         navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, -offset))
+        
+        updateHeaderView()  
     }
     
 }
@@ -179,7 +202,6 @@ struct HomeViewControllerPreviews: PreviewProvider {
         if #available(iOS 14.0, *) {
             ContainerPreview()
                 .ignoresSafeArea()
-                .environment(\.colorScheme, .dark)
         } else {
             ContainerPreview()
                 .environment(\.colorScheme, .dark)
