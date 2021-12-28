@@ -24,7 +24,7 @@ class UpcomingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Upcoming"
+        title = "Upcoming Soon"
 
         view.backgroundColor = .black
         
