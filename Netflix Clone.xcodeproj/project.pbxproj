@@ -75,6 +75,7 @@
 		55FE120A277A543A0031E404 /* TitleCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleCollectionViewCell.swift; sourceTree = "<group>"; };
 		55FE1211277A75140031E404 /* UpcomingTitleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingTitleTableViewCell.swift; sourceTree = "<group>"; };
 		55FE1213277A90B80031E404 /* TitleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleViewModel.swift; sourceTree = "<group>"; };
+		55FE1215277A9A7E0031E404 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +108,7 @@
 		55895AED27725DCF00395212 = {
 			isa = PBXGroup;
 			children = (
+				55FE1215277A9A7E0031E404 /* README.md */,
 				55895AF827725DCF00395212 /* Netflix Clone */,
 				55895B0F27725DD200395212 /* Netflix CloneTests */,
 				55895B1927725DD200395212 /* Netflix CloneUITests */,
