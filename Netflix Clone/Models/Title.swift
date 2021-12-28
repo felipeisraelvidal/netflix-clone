@@ -21,6 +21,7 @@ struct Title: Codable {
     let voteCount: Int
     let releaseDate: String?
     let voteAverage: Double
+    let backdropPath: String?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -33,5 +34,6 @@ struct Title: Codable {
         case voteCount = "vote_count"
         case releaseDate = "release_date"
         case voteAverage = "vote_average"
+        case backdropPath = "backdrop_path"
     }
 }
