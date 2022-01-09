@@ -65,11 +65,9 @@ extension CollectionViewTableViewCell: UICollectionViewDelegate, UICollectionVie
             return UICollectionViewCell()
         }
         
-        guard let model = titles[indexPath.item].posterPath else {
-            return UICollectionViewCell()
-        }
+        let title = titles[indexPath.item]
         
-        cell.configure(with: model)
+        cell.configure(with: title)
         
         return cell
     }

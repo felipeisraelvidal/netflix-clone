@@ -19,6 +19,16 @@ class TitleCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
     
+    private let nameLabel: UILabel = {
+        let label = UILabel()
+        label.font = .preferredFont(for: .subheadline, weight: .semibold)
+        label.textColor = .white
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private let loadingIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.tintColor = .secondaryLabel
@@ -30,6 +40,7 @@ class TitleCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        contentView.addSubview(nameLabel)
         contentView.addSubview(posterImageView)
         contentView.addSubview(loadingIndicator)
         
@@ -43,6 +54,12 @@ class TitleCollectionViewCell: UICollectionViewCell {
     }
     
     private func applyConstraints() {
+        let nameLabelConstraints = [
+            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            nameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+        ]
+        
         let posterImageViewConstraints = [
             posterImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             posterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -55,15 +72,18 @@ class TitleCollectionViewCell: UICollectionViewCell {
             loadingIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ]
         
+        NSLayoutConstraint.activate(nameLabelConstraints)
         NSLayoutConstraint.activate(posterImageViewConstraints)
         NSLayoutConstraint.activate(loadingIndicatorConstraints)
     }
     
-    public func configure(with model: String) {
-        guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(model)") else { return }
-        posterImageView.sd_setImage(with: url, completed: nil)
-        posterImageView.sd_setImage(with: url) { _, _, _, _ in
-            self.loadingIndicator.stopAnimating()
+    public func configure(with model: Title) {
+        nameLabel.text = model.originalName ?? model.originalTitle ?? "Unknown name"
+        
+        if let posterPath = model.posterPath, let url = URL(string: "https://image.tmdb.org/t/p/w500\(posterPath)") {
+            posterImageView.sd_setImage(with: url) { _, _, _, _ in
+                self.loadingIndicator.stopAnimating()
+            }
         }
     }
 }

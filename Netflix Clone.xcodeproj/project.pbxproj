@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5573D2EC278A596B000332D9 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5573D2EB278A596B000332D9 /* SearchResultsViewController.swift */; };
 		55895AFA27725DCF00395212 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55895AF927725DCF00395212 /* AppDelegate.swift */; };
 		55895AFC27725DCF00395212 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55895AFB27725DCF00395212 /* SceneDelegate.swift */; };
 		55895AFE27725DCF00395212 /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55895AFD27725DCF00395212 /* MainTabBarViewController.swift */; };
@@ -50,6 +51,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5573D2EB278A596B000332D9 /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		55895AF627725DCF00395212 /* Netflix Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Netflix Clone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		55895AF927725DCF00395212 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		55895AFB27725DCF00395212 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -168,6 +170,7 @@
 				55895B2A2772603000395212 /* HomeViewController.swift */,
 				55895B2C2772605D00395212 /* UpcomingViewController.swift */,
 				55895B2E2772607400395212 /* SearchViewController.swift */,
+				5573D2EB278A596B000332D9 /* SearchResultsViewController.swift */,
 				55895B30277260A900395212 /* DownloadsViewController.swift */,
 			);
 			path = Controllers;
@@ -355,6 +358,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				55895B2F2772607400395212 /* SearchViewController.swift in Sources */,
+				5573D2EC278A596B000332D9 /* SearchResultsViewController.swift in Sources */,
 				55FE1203277A2FE50031E404 /* UIFont+Extensions.swift in Sources */,
 				55895AFE27725DCF00395212 /* MainTabBarViewController.swift in Sources */,
 				55895B3827726A6400395212 /* CollectionViewTableViewCell.swift in Sources */,
