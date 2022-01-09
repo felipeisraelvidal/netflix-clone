@@ -100,20 +100,27 @@ class SearchViewController: UIViewController {
     }
     
     private func searchMovies(with searchText: String?) {
-        guard let query = searchText,
-              !query.trimmingCharacters(in: .whitespaces).isEmpty,
-              query.trimmingCharacters(in: .whitespaces).count >= 3,
-              let resultsController = searchController.searchResultsController as? SearchResultsViewController else { return }
         
-        APICaller.shared.search(with: query) { result in
-            switch result {
-            case .success(let titles):
-                resultsController.titles = titles
-                DispatchQueue.main.async {
-                    resultsController.collectionView.reloadData()
+        guard let query = searchText else { return }
+        
+        guard let resultsController = searchController.searchResultsController as? SearchResultsViewController else { return }
+        
+        if query.isEmpty {
+            resultsController.titles = []
+            DispatchQueue.main.async {
+                resultsController.collectionView.reloadData()
+            }
+        } else {
+            APICaller.shared.search(with: query) { result in
+                switch result {
+                case .success(let titles):
+                    resultsController.titles = titles
+                    DispatchQueue.main.async {
+                        resultsController.collectionView.reloadData()
+                    }
+                case .failure(let error):
+                    print(error.localizedDescription)
                 }
-            case .failure(let error):
-                print(error.localizedDescription)
             }
         }
     }
