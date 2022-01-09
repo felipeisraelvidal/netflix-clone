@@ -23,6 +23,10 @@ struct Title: Codable {
     let voteAverage: Double
     let backdropPath: String?
     
+    var safeName: String {
+        originalTitle ?? originalName ?? "Unknown name"
+    }
+    
     enum CodingKeys: String, CodingKey {
         case id
         case overview

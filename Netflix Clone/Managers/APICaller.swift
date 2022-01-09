@@ -9,12 +9,14 @@ import Foundation
 
 struct Constants {
     static let API_KEY = "12bb12378f504a44501ed07fff277c21"
+    static let YOUTUBE_API_KEY = "AIzaSyBuDyvWfuqfDE3qdF92_6cv8970rqyWHNg"
 }
 
 class APICaller {
     static let shared = APICaller()
     
     private let baseURL = "https://api.themoviedb.org"
+    private let youtubeBaseURL = "https://www.googleapis.com/youtube/v3"
     
     func getTrendingMovies(completion: @escaping (Result<[Title], Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/3/trending/movie/day?api_key=\(Constants.API_KEY)") else { return }
@@ -144,6 +146,26 @@ class APICaller {
             do {
                 let results = try JSONDecoder().decode(TitleResponse.self, from: data)
                 completion(.success(results.results))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+        
+        task.resume()
+    }
+    
+    func getMovieTrailer(with query: String, completion: @escaping (Result<YouTubeSearchResponse.Item?, Error>) -> Void) {
+        guard let query = query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else { return }
+        guard let url = URL(string: "\(youtubeBaseURL)/search?q=\(query)&key=\(Constants.YOUTUBE_API_KEY)") else { return }
+        
+        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
+            guard let data = data, error == nil else {
+                return
+            }
+            
+            do {
+                let result = try JSONDecoder().decode(YouTubeSearchResponse.self, from: data)
+                completion(.success(result.items.first))
             } catch {
                 completion(.failure(error))
             }

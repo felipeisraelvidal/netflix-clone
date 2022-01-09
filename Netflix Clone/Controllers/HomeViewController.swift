@@ -177,6 +177,13 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
         
+        cell.didTapTitle = { [weak self] title in
+            let viewController = TitlePreviewViewController()
+            viewController.configure(with: title)
+            viewController.hidesBottomBarWhenPushed = true
+            self?.navigationController?.pushViewController(viewController, animated: true)
+        }
+        
         return cell
     }
     

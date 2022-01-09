@@ -13,6 +13,8 @@ class CollectionViewTableViewCell: UITableViewCell {
     
     private var titles: [Title] = []
     
+    var didTapTitle: ((Title) -> Void)?
+    
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: 140, height: 200)
@@ -70,5 +72,26 @@ extension CollectionViewTableViewCell: UICollectionViewDelegate, UICollectionVie
         cell.configure(with: title)
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let title = titles[indexPath.item]
+//        guard let titleName = title.originalTitle ?? title.originalName else {
+//            print("Couldn't search a trailer for this title.")
+//            return
+//        }
+//
+//        APICaller.shared.getMovie(with: "\(titleName) trailer") { result in
+//            switch result {
+//            case .success(let topItem):
+//                print(topItem)
+//            case .failure(let error):
+//                print(error.localizedDescription)
+//            }
+//        }
+        
+//        collectionView.deselectItem(at: indexPath, animated: true)
+        
+        didTapTitle?(title)
     }
 }
