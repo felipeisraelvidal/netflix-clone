@@ -62,6 +62,7 @@ class HomeViewController: UIViewController {
         homeFeedTable.contentOffset = CGPoint(x: 0, y: -kTableHeaderHeight)
         
         updateHeaderView()
+        configureHeroHeaderView()
     }
     
     private func configureNavigationBar() {
@@ -74,12 +75,24 @@ class HomeViewController: UIViewController {
         navigationItem.leftBarButtonItem = logoItem
         
         navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(image: UIImage(systemName: "person"), style: .done, target: self, action: nil),
+            UIBarButtonItem(image: UIImage(systemName: "person"), style: .done, target: self, action: #selector(changeProfileButtonTapped(_:))),
             UIBarButtonItem(image: UIImage(systemName: "play.rectangle"), style: .done, target: self, action: nil)
         ]
         
         navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.barStyle = .black
+    }
+    
+    private func configureHeroHeaderView() {
+        APICaller.shared.getTrendingMovies { [weak self] result in
+            switch result {
+            case .success(let titles):
+                guard let title = titles.randomElement() else { return }
+                self?.headerView.configure(with: title)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
     
     private func applyConstraints() {
@@ -101,6 +114,15 @@ class HomeViewController: UIViewController {
         }
         
         headerView.frame = headerRect
+    }
+    
+    @objc private func changeProfileButtonTapped(_ sender: UIBarButtonItem) {
+        let viewController = ProfilePickerViewController()
+        let navController = UINavigationController(rootViewController: viewController)
+        navController.setNavigationBarHidden(true, animated: false)
+        navController.isModalInPresentation = true
+        
+        present(navController, animated: true, completion: nil)
     }
 }
 

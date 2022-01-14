@@ -159,6 +159,12 @@ class HeroHeaderView: UIView {
         fatalError()
     }
     
+    public func configure(with model: Title) {
+        guard let posterPath = model.posterPath, let url = URL(string: "https://image.tmdb.org/t/p/w500\(posterPath)") else { return }
+        
+        heroImageView.sd_setImage(with: url, completed: nil)
+    }
+    
 }
 
 #if DEBUG

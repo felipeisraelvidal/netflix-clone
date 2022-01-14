@@ -41,6 +41,7 @@ class UpcomingViewController: UIViewController {
     
     private func configureNavigationBar() {
         navigationController?.navigationBar.barStyle = .black
+        navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationItem.largeTitleDisplayMode = .always
     }
