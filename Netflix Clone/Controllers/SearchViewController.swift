@@ -49,6 +49,10 @@ class SearchViewController: UIViewController {
         
 //        searchController.searchResultsUpdater = self
         
+        if let resultsController = searchController.searchResultsController as? SearchResultsViewController {
+            resultsController.delegate = self
+        }
+        
         fetchDiscoverMovies()
     }
     
@@ -127,6 +131,16 @@ class SearchViewController: UIViewController {
 
 }
 
+extension SearchViewController: SearchResultsViewControllerDelegate {
+    
+    func searchResultsViewControllerDidTapTitle(_ title: Title) {
+        let viewController = TitlePreviewViewController()
+        viewController.configure(with: title)
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+}
+
 extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -151,6 +165,17 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         cell.configure(with: viewModel)
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        let title = titles[indexPath.row]
+        
+        let viewController = TitlePreviewViewController()
+        viewController.configure(with: title)
+        
+        navigationController?.pushViewController(viewController, animated: true)
     }
 }
 

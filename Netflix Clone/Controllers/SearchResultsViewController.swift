@@ -7,11 +7,17 @@
 
 import UIKit
 
+protocol SearchResultsViewControllerDelegate: AnyObject {
+    func searchResultsViewControllerDidTapTitle(_ title: Title)
+}
+
 class SearchResultsViewController: UIViewController {
     
     private let numberOfColumns = 3
     
     public var titles: [Title] = []
+    
+    public weak var delegate: SearchResultsViewControllerDelegate?
     
     public let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -81,5 +87,12 @@ extension SearchResultsViewController: UICollectionViewDataSource, UICollectionV
         cell.configure(with: title)
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        
+        let title = titles[indexPath.item]
+        delegate?.searchResultsViewControllerDidTapTitle(title)
     }
 }
