@@ -131,6 +131,8 @@ class TitlePreviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationController?.navigationBar.transform = .identity
+        
         view.backgroundColor = .black
 
         view.addSubview(webView)
