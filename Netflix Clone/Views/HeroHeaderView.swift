@@ -14,7 +14,7 @@ class HeroHeaderView: UIView {
         
         if #available(iOS 15.0, *) {
             var configuration = UIButton.Configuration.filled()
-            configuration.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 24, bottom: 12, trailing: 24)
+            configuration.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 24, bottom: 10, trailing: 24)
             configuration.baseBackgroundColor = .white
             configuration.title = "Play"
             configuration.baseForegroundColor = .black
@@ -36,7 +36,7 @@ class HeroHeaderView: UIView {
         
         if #available(iOS 15.0, *) {
             var configuration = UIButton.Configuration.bordered()
-            configuration.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 24, bottom: 12, trailing: 24)
+            configuration.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 24, bottom: 10, trailing: 24)
             configuration.title = "Download"
             configuration.baseForegroundColor = .white
             button.configuration = configuration

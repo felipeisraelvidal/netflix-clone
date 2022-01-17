@@ -17,7 +17,7 @@ enum Sections: Int {
 
 class HomeViewController: UIViewController {
     
-    private let kTableHeaderHeight: CGFloat = 450
+    private var kTableHeaderHeight: CGFloat = 450
     
     let sectionTitles: [String] = [
         "Trending Movies",
@@ -54,6 +54,8 @@ class HomeViewController: UIViewController {
         applyConstraints()
         
         configureNavigationBar()
+        
+        kTableHeaderHeight = view.bounds.height * 0.6
         
         headerView = HeroHeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: kTableHeaderHeight))
         homeFeedTable.tableHeaderView = nil
