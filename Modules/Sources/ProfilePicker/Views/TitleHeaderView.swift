@@ -7,7 +7,7 @@ public class TitleHeaderView: UICollectionReusableView {
     public var editButtonTapped: (() -> Void)?
     
     private let iconImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "netflix_logo"))
+        let imageView = UIImageView(image: UIImage(named: "netflix_logo", in: .module, with: nil))
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView

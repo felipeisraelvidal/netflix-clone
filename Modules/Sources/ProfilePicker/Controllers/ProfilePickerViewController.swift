@@ -129,7 +129,11 @@ extension ProfilePickerViewController: UICollectionViewDataSource, UICollectionV
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.item > 0 {
-            dismiss(animated: true, completion: nil)
+            if viewModel.isEditing {
+                // Edit profile
+            } else {
+                dismiss(animated: true, completion: nil)
+            }
         }
     }
 }
