@@ -1,15 +1,8 @@
-//
-//  AddProfileCollectionViewCell.swift
-//  Netflix Clone
-//
-//  Created by Felipe Vidal on 11/01/22.
-//
-
 import UIKit
 
-class AddProfileCollectionViewCell: UICollectionViewCell {
+public class AddProfileCollectionViewCell: UICollectionViewCell {
     
-    static let identifier = "AddProfileCollectionViewCell"
+    public static let identifier = "AddProfileCollectionViewCell"
     
     private let plusIcon: UIImageView = {
         let imageView = UIImageView()
@@ -41,7 +34,7 @@ class AddProfileCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    override var isHighlighted: Bool {
+    public override var isHighlighted: Bool {
         didSet {
             UIView.animate(withDuration: 0.05) {
                 self.alpha = self.isHighlighted ? 0.5 : 1
@@ -87,11 +80,10 @@ class AddProfileCollectionViewCell: UICollectionViewCell {
         fatalError()
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         plusIconContainerView.layoutIfNeeded()
         plusIconContainerView.layer.cornerRadius = plusIconContainerView.layer.bounds.height / 2
     }
-    
 }

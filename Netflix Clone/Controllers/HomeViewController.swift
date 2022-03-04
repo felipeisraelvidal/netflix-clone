@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ProfilePicker
 
 enum Sections: Int {
     case trendingMovies = 0
@@ -119,7 +120,9 @@ class HomeViewController: UIViewController {
     }
     
     @objc private func changeProfileButtonTapped(_ sender: UIBarButtonItem) {
-        let viewController = ProfilePickerViewController()
+        let viewController = ProfilePickerViewController(
+            viewModel: ProfilePickerViewModel()
+        )
         let navController = UINavigationController(rootViewController: viewController)
         navController.setNavigationBarHidden(true, animated: false)
         navController.isModalInPresentation = true

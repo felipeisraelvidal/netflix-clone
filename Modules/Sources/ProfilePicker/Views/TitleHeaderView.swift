@@ -1,13 +1,10 @@
-//
-//  ProfilePickerHeaderView.swift
-//  Netflix Clone
-//
-//  Created by Felipe Vidal on 11/01/22.
-//
-
 import UIKit
 
-class ProfilePickerHeaderView: UICollectionReusableView {
+public class TitleHeaderView: UICollectionReusableView {
+    
+    public static let identifier = "ProfilePickerHeaderView"
+    
+    public var editButtonTapped: (() -> Void)?
     
     private let iconImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "netflix_logo"))
@@ -28,8 +25,38 @@ class ProfilePickerHeaderView: UICollectionReusableView {
         return label
     }()
     
+    private let editButton: UIButton = {
+        let button = UIButton(type: .system)
+        
+        let imageConfiguration = UIImage.SymbolConfiguration(font: .preferredFont(for: .title3, weight: .bold))
+        let image = UIImage(systemName: "pencil", withConfiguration: imageConfiguration)
+        
+        if #available(iOS 15.0, *) {
+            var configuration = UIButton.Configuration.plain()
+            
+            configuration.baseForegroundColor = .white
+            configuration.image = image
+            
+            button.configuration = configuration
+        } else {
+            button.setImage(image, for: .normal)
+            button.tintColor = .white
+        }
+        
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        editButton.addTarget(self, action: #selector(toggleEdit(_:)), for: .touchUpInside)
+        
+        addSubview(editButton)
+        NSLayoutConstraint.activate([
+            editButton.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            editButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+        ])
         
         addSubview(iconImageView)
         NSLayoutConstraint.activate([
@@ -50,6 +77,10 @@ class ProfilePickerHeaderView: UICollectionReusableView {
     
     required init?(coder: NSCoder) {
         fatalError()
+    }
+    
+    @objc private func toggleEdit(_ sender: UIButton) {
+        editButtonTapped?()
     }
     
 }
