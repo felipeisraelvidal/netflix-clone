@@ -11,6 +11,7 @@ let package = Package(
             name: "Modules",
             targets: [
                 "Core",
+                "Home",
                 "ProfilePicker"
             ]
         ),
@@ -18,6 +19,7 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
+        .package(url: "https://github.com/SDWebImage/SDWebImage.git", .branch("master"))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -28,6 +30,18 @@ let package = Package(
         .testTarget(
             name: "CoreTests",
             dependencies: ["Core"]),
+        .target(
+            name: "Networking",
+            dependencies: ["Core"]),
+        .testTarget(
+            name: "NetworkingTests",
+            dependencies: ["Networking"]),
+        .target(
+            name: "Home",
+            dependencies: ["Core", "Networking", "SDWebImage"]),
+        .testTarget(
+            name: "HomeTests",
+            dependencies: ["Home"]),
         .target(
             name: "ProfilePicker",
             dependencies: ["Core"]),
