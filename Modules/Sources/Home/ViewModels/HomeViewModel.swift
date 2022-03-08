@@ -88,4 +88,16 @@ public final class HomeViewModel {
         }
     }
     
+    public func fetchHeroTitle(_ completion: @escaping (Result<Title?, Error>) -> Void) {
+        fetchTopRatedMovies { result in
+            switch result {
+            case .success(let titles):
+                let randomTitle = titles.randomElement()
+                completion(.success(randomTitle))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
 }

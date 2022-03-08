@@ -4,6 +4,8 @@ public class HomeViewController: UIViewController {
     
     private var viewModel: HomeViewModel
     
+    private var kTableHeroHeight: CGFloat = 450
+    
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.backgroundColor = .black
@@ -15,6 +17,8 @@ public class HomeViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
+    
+    private var heroView: HeroView!
     
     // MARK: - Initializers
     public init(viewModel: HomeViewModel) {
@@ -32,6 +36,10 @@ public class HomeViewController: UIViewController {
         view.backgroundColor = .black
         
         configureNavigationBar()
+        
+        configureHeroView()
+        updateHeroView()
+        setupHeroView()
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -81,6 +89,54 @@ public class HomeViewController: UIViewController {
         
         navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.barStyle = .black
+    }
+    
+    private func configureHeroView() {
+        kTableHeroHeight = view.bounds.height * 0.6
+        
+        heroView = HeroView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: kTableHeroHeight))
+        tableView.tableHeaderView = nil
+        tableView.addSubview(heroView)
+        tableView.contentInset = UIEdgeInsets(top: kTableHeroHeight, left: 0, bottom: 0, right: 0)
+        tableView.contentOffset = CGPoint(x: 0, y: -kTableHeroHeight)
+    }
+    
+    private func updateHeroView() {
+        var headerRect = CGRect(x: 0, y: -kTableHeroHeight, width: view.bounds.width, height: kTableHeroHeight)
+        if tableView.contentOffset.y < -kTableHeroHeight {
+            headerRect.origin.y = tableView.contentOffset.y
+            headerRect.size.height = -tableView.contentOffset.y
+        }
+        
+        heroView.frame = headerRect
+    }
+    
+    private func setupHeroView() {
+        viewModel.fetchHeroTitle { [weak self] result in
+            switch result {
+            case .success(let title):
+                guard let title = title else { return }
+                
+                let viewModel = HeroViewModel(
+                    title: title
+                )
+                self?.heroView.configure(with: viewModel)
+                
+                self?.heroView.playButtonTapped = { title in
+                    print("Play \(title.safeName)")
+                }
+                
+                self?.heroView.downloadButtonTapped = { title in
+                    print("Download \(title.safeName)")
+                }
+                
+                self?.heroView.aboutButtonTapped = { title in
+                    print("About \(title.safeName)")
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
     
     // MARK: - Functions
@@ -182,6 +238,15 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         return cell
+    }
+    
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let defaultOffset = view.safeAreaInsets.top
+        let offset = scrollView.contentOffset.y + defaultOffset
+        
+        navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, -offset))
+        
+        updateHeroView()
     }
     
 }
