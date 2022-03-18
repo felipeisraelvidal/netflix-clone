@@ -12,6 +12,7 @@ let package = Package(
             targets: [
                 "Core",
                 "Home",
+                "TitlePreview",
                 "ProfilePicker"
             ]
         ),
@@ -42,6 +43,12 @@ let package = Package(
         .testTarget(
             name: "HomeTests",
             dependencies: ["Home"]),
+        .target(
+            name: "TitlePreview",
+            dependencies: ["Core"]),
+        .testTarget(
+            name: "TitlePreviewTests",
+            dependencies: ["TitlePreview"]),
         .target(
             name: "ProfilePicker",
             dependencies: ["Core"]),
