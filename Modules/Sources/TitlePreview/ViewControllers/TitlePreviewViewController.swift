@@ -5,13 +5,17 @@ public class TitlePreviewViewController: UIViewController {
     
     private var viewModel: TitlePreviewViewModel
     
+    private let webView: WKWebView = {
+        let webView = WKWebView()
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        return webView
+    }()
+    
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.backgroundColor = .black
         tableView.allowsSelection = false
         tableView.separatorStyle = .none
-        
-        tableView.register(TrailerPreviewSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: TrailerPreviewSectionHeaderView.identifier)
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.register(TopInfoTableViewCell.self, forCellReuseIdentifier: TopInfoTableViewCell.identifier)
@@ -36,8 +40,7 @@ public class TitlePreviewViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationController?.navigationBar.tintColor = .white
-        navigationController?.navigationBar.barStyle = .black
+        configureNavigationBar()
         
         view.backgroundColor = .black
         
@@ -51,18 +54,36 @@ public class TitlePreviewViewController: UIViewController {
     public override func loadView() {
         super.loadView()
         
+        setupConstraints()
+    }
+    
+    // MARK: - Private methods
+    
+    private func setupConstraints() {
+        
+        view.addSubview(webView)
+        NSLayoutConstraint.activate([
+            webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            webView.heightAnchor.constraint(equalTo: webView.widthAnchor, multiplier: 9/16)
+        ])
+        
         view.addSubview(tableView)
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.topAnchor.constraint(equalTo: webView.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        
     }
     
-    // MARK: - Functions
-    
-    private func setupConstraints() {
+    private func configureNavigationBar() {
+        
+        navigationItem.largeTitleDisplayMode = .never
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.barStyle = .black
         
     }
     
@@ -78,14 +99,6 @@ extension TitlePreviewViewController: UITableViewDataSource, UITableViewDelegate
     
     public func numberOfSections(in tableView: UITableView) -> Int {
         return 1
-    }
-    
-    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TrailerPreviewSectionHeaderView.identifier) as? TrailerPreviewSectionHeaderView else {
-            return nil
-        }
-        
-        return headerView
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
