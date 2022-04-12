@@ -32,6 +32,9 @@ let package = Package(
             name: "CoreTests",
             dependencies: ["Core"]),
         .target(
+            name: "CoreUI",
+            dependencies: ["Core", "SDWebImage"]),
+        .target(
             name: "Networking",
             dependencies: ["Core"]),
         .testTarget(
@@ -39,7 +42,7 @@ let package = Package(
             dependencies: ["Networking"]),
         .target(
             name: "Home",
-            dependencies: ["Core", "Networking", "SDWebImage"]),
+            dependencies: ["Core", "CoreUI", "Networking", "SDWebImage"]),
         .testTarget(
             name: "HomeTests",
             dependencies: ["Home"]),

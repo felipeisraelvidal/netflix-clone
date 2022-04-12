@@ -6,12 +6,13 @@
 //
 
 import Foundation
+import Core
 
 struct TitleResponse: Codable {
     let results: [Title]
 }
 
-struct Title: Codable {
+struct Title1: Codable {
     let id: Int
     let mediaType: String?
     let originalName: String?

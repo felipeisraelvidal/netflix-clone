@@ -2,9 +2,9 @@ import UIKit
 import Core
 import SDWebImage
 
-class TitleCollectionViewCell: UICollectionViewCell {
+public class TitleCollectionViewCell: UICollectionViewCell {
     
-    static let identifier = "TitleCollectionViewCell"
+    public static let identifier = "TitleCollectionViewCell"
     
     private let nameLabel: UILabel = {
         let label = UILabel()
@@ -52,6 +52,7 @@ class TitleCollectionViewCell: UICollectionViewCell {
         ])
         
     }
+    
     public func configure(with title: Title) {
         nameLabel.text = title.safeName
         

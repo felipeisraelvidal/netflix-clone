@@ -29,75 +29,23 @@ extension HomeViewModel {
 
 public final class HomeViewModel {
     
+    let homeService: HomeServiceProtocol
+    
     let sections: [Section] = Section.allCases
+    private(set) var testSections: [HomeSection] = []
     
-    public init() {}
-    
-    public func fetchTrendingMovies(completion: @escaping (Result<[Title], Error>) -> Void) {
-        NetworkManager.shared.getTrendingMovies { result in
-            switch result {
-            case .success(let titles):
-                completion(.success(titles))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    public func fetchTrendingTVs(completion: @escaping (Result<[Title], Error>) -> Void) {
-        NetworkManager.shared.getTrendingTVs { result in
-            switch result {
-            case .success(let titles):
-                completion(.success(titles))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    public func fetchPopular(completion: @escaping (Result<[Title], Error>) -> Void) {
-        NetworkManager.shared.getPopular { result in
-            switch result {
-            case .success(let titles):
-                completion(.success(titles))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    public func fetchUpcomingMovies(completion: @escaping (Result<[Title], Error>) -> Void) {
-        NetworkManager.shared.getUpcomingMovies { result in
-            switch result {
-            case .success(let titles):
-                completion(.success(titles))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    public func fetchTopRatedMovies(completion: @escaping (Result<[Title], Error>) -> Void) {
-        NetworkManager.shared.getTopRated { result in
-            switch result {
-            case .success(let titles):
-                completion(.success(titles))
-            case .failure(let error):
-                completion(.failure(error))
-            }
+    public init(
+        homeService: HomeServiceProtocol
+    ) {
+        self.homeService = homeService
+        
+        homeService.buildSections { [weak self] sections in
+            self?.testSections = sections
         }
     }
     
     public func fetchHeroTitle(_ completion: @escaping (Result<Title?, Error>) -> Void) {
-        fetchTopRatedMovies { result in
-            switch result {
-            case .success(let titles):
-                let randomTitle = titles.randomElement()
-                completion(.success(randomTitle))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
+        homeService.fetchHero(completion)
     }
     
 }

@@ -1,4 +1,5 @@
 import UIKit
+import CoreUI
 
 class CollectionTableViewCell: UITableViewCell {
     

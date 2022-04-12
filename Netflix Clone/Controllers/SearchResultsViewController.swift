@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Core
 
 protocol SearchResultsViewControllerDelegate: AnyObject {
     func searchResultsViewControllerDidTapTitle(_ title: Title)

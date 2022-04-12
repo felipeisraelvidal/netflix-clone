@@ -150,7 +150,7 @@ public class HomeViewController: UIViewController {
 extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     
     public func numberOfSections(in tableView: UITableView) -> Int {
-        return viewModel.sections.count
+        return viewModel.testSections.count
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -160,7 +160,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleSectionHeader.identifier) as? TitleSectionHeader else { return nil }
         
-        headerView.titleLabel.text = viewModel.sections[section].title
+        headerView.titleLabel.text = viewModel.testSections[section].title
         
         return headerView
     }
@@ -174,66 +174,16 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
             return UITableViewCell()
         }
         
-        switch viewModel.sections[indexPath.section] {
-        case .trendingMovies:
-            viewModel.fetchTrendingMovies { result in
-                switch result {
-                case .success(let titles):
-                    let viewModel = CollectionTableViewCellViewModel(
-                        titles: titles
-                    )
-                    cell.configure(with: viewModel)
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            }
-        case .trendingTVs:
-            viewModel.fetchTrendingTVs { result in
-                switch result {
-                case .success(let titles):
-                    let viewModel = CollectionTableViewCellViewModel(
-                        titles: titles
-                    )
-                    cell.configure(with: viewModel)
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            }
-        case .popular:
-            viewModel.fetchPopular { result in
-                switch result {
-                case .success(let titles):
-                    let viewModel = CollectionTableViewCellViewModel(
-                        titles: titles
-                    )
-                    cell.configure(with: viewModel)
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            }
-        case .upcomingMovies:
-            viewModel.fetchUpcomingMovies { result in
-                switch result {
-                case .success(let titles):
-                    let viewModel = CollectionTableViewCellViewModel(
-                        titles: titles
-                    )
-                    cell.configure(with: viewModel)
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            }
-        case .topRated:
-            viewModel.fetchTopRatedMovies { result in
-                switch result {
-                case .success(let titles):
-                    let viewModel = CollectionTableViewCellViewModel(
-                        titles: titles
-                    )
-                    cell.configure(with: viewModel)
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
+        let section = viewModel.testSections[indexPath.section]
+        section.fetchHandler { result in
+            switch result {
+            case .success(let titles):
+                let viewModel = CollectionTableViewCellViewModel(
+                    titles: titles
+                )
+                cell.configure(with: viewModel)
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
         
@@ -268,7 +218,10 @@ struct HomeViewControllerPreviews: PreviewProvider {
         typealias UIViewControllerType = UINavigationController
         
         func makeUIViewController(context: Context) -> UIViewControllerType {
-            let viewModel = HomeViewModel()
+            let viewModel = HomeViewModel(
+                homeService: DummyHomeService()
+            )
+            
             let viewController = HomeViewController(
                 viewModel: viewModel
             )
