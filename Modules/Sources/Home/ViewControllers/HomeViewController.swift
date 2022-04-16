@@ -18,7 +18,7 @@ public class HomeViewController: UIViewController {
         return tableView
     }()
     
-    private var heroView: HeroView!
+    private var heroView: HeroView?
     
     // MARK: - Initializers
     public init(viewModel: HomeViewModel) {
@@ -96,7 +96,7 @@ public class HomeViewController: UIViewController {
         
         heroView = HeroView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: kTableHeroHeight))
         tableView.tableHeaderView = nil
-        tableView.addSubview(heroView)
+        tableView.addSubview(heroView!)
         tableView.contentInset = UIEdgeInsets(top: kTableHeroHeight, left: 0, bottom: 0, right: 0)
         tableView.contentOffset = CGPoint(x: 0, y: -kTableHeroHeight)
     }
@@ -108,7 +108,7 @@ public class HomeViewController: UIViewController {
             headerRect.size.height = -tableView.contentOffset.y
         }
         
-        heroView.frame = headerRect
+        heroView?.frame = headerRect
     }
     
     private func setupHeroView() {
@@ -116,22 +116,19 @@ public class HomeViewController: UIViewController {
             switch result {
             case .success(let title):
                 guard let title = title else { return }
-                
-                let viewModel = HeroViewModel(
-                    title: title
-                )
-                self?.heroView.configure(with: viewModel)
-                
-                self?.heroView.playButtonTapped = { title in
-                    print("Play \(title.safeName)")
+
+                self?.heroView?.configure(with: title)
+
+                self?.heroView?.playButtonTapped = { [weak self] title in
+                    self?.viewModel.playTitle(title)
                 }
-                
-                self?.heroView.downloadButtonTapped = { title in
-                    print("Download \(title.safeName)")
+
+                self?.heroView?.downloadButtonTapped = { [weak self] title in
+                    self?.viewModel.downloadTitle(title)
                 }
-                
-                self?.heroView.aboutButtonTapped = { title in
-                    print("About \(title.safeName)")
+
+                self?.heroView?.aboutButtonTapped = { [weak self] title in
+                    self?.viewModel.goToTitleDetails(title: title)
                 }
             case .failure(let error):
                 print(error.localizedDescription)
@@ -142,7 +139,7 @@ public class HomeViewController: UIViewController {
     // MARK: - Functions
     
     @objc private func changeProfileButtonTapped(_ sender: UIBarButtonItem) {
-        
+        viewModel.goToProfilePicker()
     }
     
 }
@@ -150,7 +147,7 @@ public class HomeViewController: UIViewController {
 extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     
     public func numberOfSections(in tableView: UITableView) -> Int {
-        return viewModel.testSections.count
+        return viewModel.sections.count
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -160,7 +157,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleSectionHeader.identifier) as? TitleSectionHeader else { return nil }
         
-        headerView.titleLabel.text = viewModel.testSections[section].title
+        headerView.titleLabel.text = viewModel.sections[section].title
         
         return headerView
     }
@@ -174,7 +171,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
             return UITableViewCell()
         }
         
-        let section = viewModel.testSections[indexPath.section]
+        let section = viewModel.sections[indexPath.section]
         section.fetchHandler { result in
             switch result {
             case .success(let titles):
@@ -203,6 +200,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
 
 #if DEBUG
 import SwiftUI
+import Core
 struct HomeViewControllerPreviews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {
@@ -214,12 +212,19 @@ struct HomeViewControllerPreviews: PreviewProvider {
         }
     }
     
+    class Navigation: HomeNavigation {
+        func goToProfilePicker() {}
+        func goToTitleDetails(_ title: Title) {}
+        func goToPlayTitle(_ title: Title) {}
+    }
+    
     struct ContainerPreview: UIViewControllerRepresentable {
         typealias UIViewControllerType = UINavigationController
         
         func makeUIViewController(context: Context) -> UIViewControllerType {
             let viewModel = HomeViewModel(
-                homeService: DummyHomeService()
+                homeService: DummyHomeService(),
+                navigation: Navigation()
             )
             
             let viewController = HomeViewController(

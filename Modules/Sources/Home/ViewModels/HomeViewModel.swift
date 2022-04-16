@@ -2,50 +2,48 @@ import Foundation
 import Networking
 import Core
 
-extension HomeViewModel {
-    enum Section: Int, CaseIterable {
-        case trendingMovies = 0
-        case trendingTVs = 1
-        case popular = 2
-        case upcomingMovies = 3
-        case topRated = 4
-        
-        var title: String {
-            switch self {
-            case .trendingMovies:
-                return "Trending Movies"
-            case .trendingTVs:
-                return "Trending TVs"
-            case .popular:
-                return "Popular"
-            case .upcomingMovies:
-                return "Upcoming Movies"
-            case .topRated:
-                return "Top Rated"
-            }
-        }
-    }
-}
-
 public final class HomeViewModel {
     
-    let homeService: HomeServiceProtocol
+    private let homeService: HomeServiceProtocol
     
-    let sections: [Section] = Section.allCases
-    private(set) var testSections: [HomeSection] = []
+    weak var navigation: HomeNavigation!
+    
+    private(set) var sections: [HomeSection] = []
     
     public init(
-        homeService: HomeServiceProtocol
+        homeService: HomeServiceProtocol,
+        navigation: HomeNavigation
     ) {
         self.homeService = homeService
+        self.navigation = navigation
         
         homeService.buildSections { [weak self] sections in
-            self?.testSections = sections
+            self?.sections = sections
         }
     }
+    
+    // MARK: - Public methods
     
     public func fetchHeroTitle(_ completion: @escaping (Result<Title?, Error>) -> Void) {
         homeService.fetchHero(completion)
+    }
+    
+    func goToProfilePicker() {
+        navigation.goToProfilePicker()
+    }
+    
+    func playTitle(_ title: Title) {
+        navigation.goToPlayTitle(title)
+    }
+    
+    func downloadTitle(_ title: Title) {
+        homeService.downloadTitle(title) {
+            print("Title downloaded successfully")
+        }
+    }
+    
+    func goToTitleDetails(title: Title) {
+        navigation.goToTitleDetails(title)
     }
     
 }

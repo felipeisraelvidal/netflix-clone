@@ -4,7 +4,7 @@ import Core
 
 class HeroView: UIView {
     
-    weak private var viewModel: HeroViewModel?
+    private var title: Title?
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -217,7 +217,7 @@ class HeroView: UIView {
         
         if #available(iOS 14.0, *) {
             aboutButton.addAction(UIAction(handler: { [weak self] _ in
-                self?.downloadTitle()
+                self?.aboutTitle()
             }), for: .touchUpInside)
         } else {
             aboutButton.addTarget(self, action: #selector(handleAboutButtonTap(_:)), for: .touchUpInside)
@@ -225,24 +225,23 @@ class HeroView: UIView {
         
     }
     
-    public func configure(with viewModel: HeroViewModel) {
-        self.viewModel = viewModel
-        
-        imageView.sd_setImage(with: viewModel.title.posterURL, completed: nil)
+    public func configure(with title: Title) {
+        self.title = title
+        imageView.sd_setImage(with: title.posterURL, completed: nil)
     }
     
     private func playTitle() {
-        guard let title = viewModel?.title else { return }
+        guard let title = title else { return }
         playButtonTapped?(title)
     }
     
     private func downloadTitle() {
-        guard let title = viewModel?.title else { return }
+        guard let title = title else { return }
         downloadButtonTapped?(title)
     }
     
     private func aboutTitle() {
-        guard let title = viewModel?.title else { return }
+        guard let title = title else { return }
         aboutButtonTapped?(title)
     }
     

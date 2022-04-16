@@ -17,6 +17,7 @@ public struct HomeSection {
 public protocol HomeServiceProtocol {
     func buildSections(_ completion: @escaping ([HomeSection]) -> Void)
     func fetchHero(_ completion: @escaping (Result<Title?, Error>) -> Void)
+    func downloadTitle(_ title: Title, completion: @escaping () -> Void)
 }
 
 #if DEBUG
@@ -42,15 +43,16 @@ struct DummyHomeService: HomeServiceProtocol {
     }
     
     func fetchHero(_ completion: @escaping (Result<Title?, Error>) -> Void) {
-        fetchTopRated { result in
-            switch result {
-            case .success(let titles):
-                let randomTitle = titles.randomElement()
-                completion(.success(randomTitle))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
+        let title = Title(
+            id: 0,
+            originalName: "Harry Potter"
+        )
+        completion(.success(title))
+    }
+    
+    func downloadTitle(_ title: Title, completion: @escaping () -> Void) {
+        print("Download title: \(title.safeName)")
+        completion()
     }
     
     // MARK: - Private methods

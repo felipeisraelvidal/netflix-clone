@@ -31,6 +31,7 @@ struct HomeService: HomeServiceProtocol {
     }
     
     func fetchHero(_ completion: @escaping (Result<Title?, Error>) -> Void) {
+        completion(.success(nil))
         fetchTopRated { result in
             switch result {
             case .success(let titles):
@@ -40,6 +41,11 @@ struct HomeService: HomeServiceProtocol {
                 completion(.failure(error))
             }
         }
+    }
+    
+    func downloadTitle(_ title: Title, completion: @escaping () -> Void) {
+        print("Download title: \(title.safeName)")
+        completion()
     }
     
     // MARK: - Private methods
