@@ -1,5 +1,6 @@
 import UIKit
 import WebKit
+import Core
 
 public class TitlePreviewViewController: UIViewController {
     
@@ -48,7 +49,7 @@ public class TitlePreviewViewController: UIViewController {
         tableView.delegate = self
         
         setupConstraints()
-        configureLabels()
+        configureLabels(with: viewModel.title)
     }
     
     public override func loadView() {
@@ -87,8 +88,8 @@ public class TitlePreviewViewController: UIViewController {
         
     }
     
-    private func configureLabels() {
-        title = viewModel.title.safeName
+    private func configureLabels(with model: Title) {
+        self.title = model.safeName
     }
     
     // MARK: - Actions
@@ -113,6 +114,7 @@ extension TitlePreviewViewController: UITableViewDataSource, UITableViewDelegate
             }
             
             cell.backgroundColor = .black
+            cell.configure(with: viewModel.title)
             
             return cell
         default:

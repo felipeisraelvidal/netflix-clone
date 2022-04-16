@@ -1,6 +1,7 @@
 import UIKit
 import Home
 import Core
+import TitlePreview
 
 final class HomeCoordinator: Coordinator {
     
@@ -19,6 +20,8 @@ final class HomeCoordinator: Coordinator {
     // MARK: - Public methods
     
     func start() {
+        
+        rootViewController.navigationBar.barStyle = .black
         
         let viewModel = HomeViewModel(
             homeService: HomeService(),
@@ -47,8 +50,14 @@ final class HomeCoordinator: Coordinator {
     }
     
     private func presentTitleDetails(_ title: Title) {
-        let viewController = UIViewController()
-        viewController.view.backgroundColor = .systemPink
+        let viewModel = TitlePreviewViewModel(
+            title: title
+        )
+        
+        let viewController = TitlePreviewViewController(
+            viewModel: viewModel
+        )
+        
         rootViewController.pushViewController(viewController, animated: true)
     }
     

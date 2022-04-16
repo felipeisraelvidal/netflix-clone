@@ -7,6 +7,8 @@ class CollectionTableViewCell: UITableViewCell {
     
     private var viewModel: CollectionTableViewCellViewModel?
     
+    weak var delegate: CollectionTableViewCellDelegate?
+    
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -77,6 +79,11 @@ extension CollectionTableViewCell: UICollectionViewDataSource, UICollectionViewD
         cell.configure(with: title)
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let title = viewModel?.titles[indexPath.item] else { return }
+        delegate?.didSelectTitle(title)
     }
     
 }

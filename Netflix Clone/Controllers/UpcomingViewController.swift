@@ -98,14 +98,14 @@ extension UpcomingViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        let title = titles[indexPath.row]
-        
-        let viewController = TitlePreviewViewController()
-        viewController.configure(with: title)
-        
-        navigationController?.pushViewController(viewController, animated: true)
+//        tableView.deselectRow(at: indexPath, animated: true)
+//        
+//        let title = titles[indexPath.row]
+//        
+//        let viewController = TitlePreviewViewController2()
+//        viewController.configure(with: title)
+//        
+//        navigationController?.pushViewController(viewController, animated: true)
     }
 }
 

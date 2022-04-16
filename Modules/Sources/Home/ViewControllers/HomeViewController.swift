@@ -179,6 +179,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
                     titles: titles
                 )
                 cell.configure(with: viewModel)
+                cell.delegate = self
             case .failure(let error):
                 print(error.localizedDescription)
             }
@@ -194,6 +195,14 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, -offset))
         
         updateHeroView()
+    }
+    
+}
+
+extension HomeViewController: CollectionTableViewCellDelegate {
+    
+    func didSelectTitle(_ title: Title) {
+        viewModel.goToTitleDetails(title: title)
     }
     
 }
