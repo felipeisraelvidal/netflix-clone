@@ -43,13 +43,18 @@ public struct Title: Codable {
         case backdropPath = "backdrop_path"
     }
     
-    public init(id: Int, originalName: String? = nil) {
+    public init(
+        id: Int,
+        mediaType: String? = nil,
+        originalName: String? = nil,
+        overview: String? = nil
+    ) {
         self.id = id
-        self.mediaType = nil
+        self.mediaType = mediaType
         self.originalName = originalName
         self.originalTitle = nil
         self.posterPath = nil
-        self.overview = nil
+        self.overview = overview
         self.voteCount = 0
         self.releaseDate = nil
         self.voteAverage = 0

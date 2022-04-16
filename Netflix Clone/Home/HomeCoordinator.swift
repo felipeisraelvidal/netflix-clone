@@ -70,7 +70,6 @@ extension HomeCoordinator: HomeNavigation {
     }
     
     func goToTitleDetails(_ title: Title) {
-        print("About \(title.safeName)")
         presentTitleDetails(title)
     }
     

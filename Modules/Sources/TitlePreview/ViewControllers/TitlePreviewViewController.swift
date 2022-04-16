@@ -144,7 +144,9 @@ struct TitlePreviewViewControllerPreviews: PreviewProvider {
             let viewModel = TitlePreviewViewModel(
                 title: .init(
                     id: 0,
-                    originalName: "Harry Potter"
+                    mediaType: "movie",
+                    originalName: "Harry Potter",
+                    overview: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
                 )
             )
             let viewController = TitlePreviewViewController(

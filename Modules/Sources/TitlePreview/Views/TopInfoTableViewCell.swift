@@ -5,6 +5,24 @@ class TopInfoTableViewCell: UITableViewCell {
     
     static let identifier = "TopInfoTableViewCell"
     
+    private lazy var mediaTypeBadgeView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .systemRed
+        view.layer.cornerRadius = 5
+        view.clipsToBounds = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var mediaTypeBadgeLabel: UILabel = {
+        let label = UILabel()
+        label.font = .preferredFont(for: .footnote, weight: .semibold)
+        label.text = "MEDIA TYPE"
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(for: .title2, weight: .bold)
@@ -15,11 +33,11 @@ class TopInfoTableViewCell: UITableViewCell {
         return label
     }()
     
-    private let watchButton: UIButton = {
+    private lazy var watchButton: UIButton = {
+        let button = UIButton(type: .system)
         
         let backgroundColor: UIColor = .white
         let foregroundColor: UIColor = .black
-        let button = UIButton(type: .system)
         
         let symbolConfiguration = UIImage.SymbolConfiguration(font: .preferredFont(for: .footnote, weight: .bold))
         let image = UIImage(systemName: "play.fill", withConfiguration: symbolConfiguration)
@@ -61,7 +79,7 @@ class TopInfoTableViewCell: UITableViewCell {
         return button
     }()
     
-    private let downloadButton: UIButton = {
+    private lazy var downloadButton: UIButton = {
         let button = UIButton(type: .system)
         
         let backgroundColor: UIColor = .systemGray
@@ -107,6 +125,16 @@ class TopInfoTableViewCell: UITableViewCell {
         return button
     }()
     
+    private lazy var overviewLabel: UILabel = {
+        let label = UILabel()
+        label.font = .preferredFont(for: .callout, weight: .regular)
+        label.text = "Overview"
+        label.textColor = .white
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     // MARK: - Initializers
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -123,10 +151,24 @@ class TopInfoTableViewCell: UITableViewCell {
     
     private func setupConstraints() {
         
+        mediaTypeBadgeView.addSubview(mediaTypeBadgeLabel)
+        NSLayoutConstraint.activate([
+            mediaTypeBadgeLabel.topAnchor.constraint(equalTo: mediaTypeBadgeView.topAnchor, constant: 4),
+            mediaTypeBadgeLabel.leadingAnchor.constraint(equalTo: mediaTypeBadgeView.leadingAnchor, constant: 8),
+            mediaTypeBadgeLabel.trailingAnchor.constraint(equalTo: mediaTypeBadgeView.trailingAnchor, constant: -8),
+            mediaTypeBadgeLabel.bottomAnchor.constraint(equalTo: mediaTypeBadgeView.bottomAnchor, constant: -4),
+        ])
+        
+        contentView.addSubview(mediaTypeBadgeView)
+        NSLayoutConstraint.activate([
+            mediaTypeBadgeView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            mediaTypeBadgeView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8)
+        ])
+        
         contentView.addSubview(nameLabel)
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            nameLabel.topAnchor.constraint(equalTo: mediaTypeBadgeView.bottomAnchor, constant: 8),
+            nameLabel.leadingAnchor.constraint(equalTo: mediaTypeBadgeView.leadingAnchor),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8)
         ])
         
@@ -141,8 +183,15 @@ class TopInfoTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             downloadButton.topAnchor.constraint(equalTo: watchButton.bottomAnchor, constant: 8),
             downloadButton.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
-            downloadButton.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
-            downloadButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
+            downloadButton.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor)
+        ])
+        
+        contentView.addSubview(overviewLabel)
+        NSLayoutConstraint.activate([
+            overviewLabel.topAnchor.constraint(equalTo: downloadButton.bottomAnchor, constant: 12),
+            overviewLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            overviewLabel.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
+            overviewLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
         ])
         
     }
@@ -150,7 +199,9 @@ class TopInfoTableViewCell: UITableViewCell {
     // MARK: - Public methods
     
     func configure(with model: Title) {
+        mediaTypeBadgeLabel.text = model.mediaType?.uppercased()
         nameLabel.text = model.safeName
+        overviewLabel.text = model.overview
     }
     
 }
