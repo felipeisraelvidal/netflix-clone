@@ -2,6 +2,7 @@ import UIKit
 import Home
 import Core
 import TitlePreview
+import TitlePlayer
 
 final class HomeCoordinator: Coordinator {
     
@@ -61,6 +62,20 @@ final class HomeCoordinator: Coordinator {
         rootViewController.pushViewController(viewController, animated: true)
     }
     
+    private func presentTitlePlayer(_ title: Title) {
+        let coordinator = TitlePlayerCoordinator(
+            rootViewController: UINavigationController(),
+            title: title
+        )
+        
+        coordinator.parentCoordinator = self
+        childCoordinators.append(coordinator)
+        
+        coordinator.start()
+        
+        rootViewController.topViewController?.present(coordinator.rootViewController, animated: true)
+    }
+    
 }
 
 extension HomeCoordinator: HomeNavigation {
@@ -74,7 +89,7 @@ extension HomeCoordinator: HomeNavigation {
     }
     
     func goToPlayTitle(_ title: Title) {
-        print("Play \(title.safeName)")
+        presentTitlePlayer(title)
     }
     
 }
