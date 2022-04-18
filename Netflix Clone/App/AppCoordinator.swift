@@ -32,14 +32,11 @@ final class AppCoordinator: Coordinator {
         
         // Comming Soon
         
-        let commingSoonViewController = UIViewController()
-        commingSoonViewController.view.backgroundColor = .systemPink
+        let upcomingSoonCoordinator = UpcomingSoonCoordinator(rootViewController: UINavigationController())
+        upcomingSoonCoordinator.parentCoordinator = self
+        childCoordinators.append(upcomingSoonCoordinator)
         
-        commingSoonViewController.tabBarItem = UITabBarItem(
-            title: "Comming Soon",
-            image: .init(systemName: "play.circle"),
-            tag: 1
-        )
+        upcomingSoonCoordinator.start()
         
         // Top Searches
         
@@ -67,7 +64,7 @@ final class AppCoordinator: Coordinator {
         
         rootViewController.viewControllers = [
             homeCoordinator.rootViewController,
-            commingSoonViewController,
+            upcomingSoonCoordinator.rootViewController,
             topSearchesViewController,
             downloadsViewController
         ]

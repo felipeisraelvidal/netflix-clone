@@ -14,7 +14,8 @@ let package = Package(
                 "Home",
                 "TitlePreview",
                 "ProfilePicker",
-                "TitlePlayer"
+                "TitlePlayer",
+                "UpcomingSoon"
             ]
         ),
     ],
@@ -61,9 +62,15 @@ let package = Package(
             dependencies: ["ProfilePicker"]),
         .target(
             name: "TitlePlayer",
-            dependencies: []),
+            dependencies: ["Core"]),
         .testTarget(
             name: "TitlePlayerTests",
             dependencies: ["TitlePlayer"]),
+        .target(
+            name: "UpcomingSoon",
+            dependencies: ["Core", "SDWebImage"]),
+        .testTarget(
+            name: "UpcomingSoonTests",
+            dependencies: ["UpcomingSoon"]),
     ]
 )

@@ -46,6 +46,7 @@ public struct Title: Codable {
     public init(
         id: Int,
         mediaType: String? = nil,
+        backdropPath: String? = nil,
         originalName: String? = nil,
         overview: String? = nil
     ) {
@@ -58,6 +59,6 @@ public struct Title: Codable {
         self.voteCount = 0
         self.releaseDate = nil
         self.voteAverage = 0
-        self.backdropPath = nil
+        self.backdropPath = backdropPath
     }
 }
