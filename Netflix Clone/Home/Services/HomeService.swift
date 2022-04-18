@@ -1,6 +1,7 @@
 import Foundation
 import Home
 import Core
+import Networking
 
 struct HomeService: HomeServiceProtocol {
     
@@ -51,32 +52,134 @@ struct HomeService: HomeServiceProtocol {
     // MARK: - Private methods
     
     private func fetchTrendingMovies(_ completion: @escaping (Result<[Title], Error>) -> Void) {
-        APICaller.shared.getTrendingMovies { result in
-            completion(result)
+        let request = HomeTrendingMoviesRequest()
+        let client = HTTPClient<TitleResponse>()
+        
+        client.request(request: request) { result in
+            switch result {
+            case .success(let response):
+                completion(.success(response.results))
+            case .failure(let error):
+                completion(.failure(error))
+            }
         }
     }
     
     private func fetchTrendingTVs(_ completion: @escaping (Result<[Title], Error>) -> Void) {
-        APICaller.shared.getTrendingTVs { result in
-            completion(result)
+        let request = HomeTrendingTVsRequest()
+        let client = HTTPClient<TitleResponse>()
+        
+        client.request(request: request) { result in
+            switch result {
+            case .success(let response):
+                completion(.success(response.results))
+            case .failure(let error):
+                completion(.failure(error))
+            }
         }
     }
     
     private func fetchPopular(_ completion: @escaping (Result<[Title], Error>) -> Void) {
-        APICaller.shared.getPopular { result in
-            completion(result)
+        var error: Error?
+        var titles: [Title] = []
+        
+        let group = DispatchGroup()
+        
+        let client = HTTPClient<TitleResponse>()
+        
+        let movieRequest = HomePopularMoviesRequest()
+        
+        group.enter()
+        client.request(request: movieRequest) { result in
+            switch result {
+            case .success(let response):
+                titles.append(contentsOf: response.results)
+                group.leave()
+            case .failure(let err):
+                error = err
+                group.leave()
+            }
+        }
+        
+        let tvRequest = HomePopularTVsRequest()
+        
+        group.enter()
+        client.request(request: tvRequest) { result in
+            switch result {
+            case .success(let response):
+                titles.append(contentsOf: response.results)
+                group.leave()
+            case .failure(let err):
+                error = err
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .main) {
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(titles))
+            }
         }
     }
     
     private func fetchUpcomingMovies(_ completion: @escaping (Result<[Title], Error>) -> Void) {
-        APICaller.shared.getUpcomingMovies { result in
-            completion(result)
+        let request = HomeUpcomingMoviesRequest()
+        let client = HTTPClient<TitleResponse>()
+        
+        client.request(request: request) { result in
+            switch result {
+            case .success(let response):
+                completion(.success(response.results))
+            case .failure(let error):
+                completion(.failure(error))
+            }
         }
     }
     
     private func fetchTopRated(_ completion: @escaping (Result<[Title], Error>) -> Void) {
-        APICaller.shared.getTopRated { result in
-            completion(result)
+        var error: Error?
+        var titles: [Title] = []
+        
+        let group = DispatchGroup()
+        
+        let client = HTTPClient<TitleResponse>()
+        
+        let movieRequest = HomeTopRatedMoviesRequest()
+        
+        group.enter()
+        client.request(request: movieRequest) { result in
+            switch result {
+            case .success(let response):
+                titles.append(contentsOf: response.results)
+                group.leave()
+            case .failure(let err):
+                error = err
+                group.leave()
+            }
+        }
+        
+        let tvRequest = HomeTopRatedTVsRequest()
+        
+        group.enter()
+        client.request(request: tvRequest) { result in
+            switch result {
+            case .success(let response):
+                titles.append(contentsOf: response.results)
+                group.leave()
+            case .failure(let err):
+                error = err
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .main) {
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(titles))
+            }
         }
     }
     
