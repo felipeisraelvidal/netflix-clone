@@ -1,4 +1,5 @@
 import UIKit
+import CoreUI
 
 public class UpcomingSoonViewController: UIViewController {
     
@@ -9,9 +10,6 @@ public class UpcomingSoonViewController: UIViewController {
         tableView.backgroundColor = .black
         tableView.dataSource = self
         tableView.delegate = self
-        
-        tableView.register(UpcomingTitleTableViewCell.self, forCellReuseIdentifier: UpcomingTitleTableViewCell.identifier)
-        
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -33,6 +31,8 @@ public class UpcomingSoonViewController: UIViewController {
         super.viewDidLoad()
         
         configureNavigationBar()
+        
+        registerCells()
         
         view.backgroundColor = .black
         
@@ -74,6 +74,12 @@ public class UpcomingSoonViewController: UIViewController {
         navigationController?.navigationBar.barStyle = .black
     }
     
+    private func registerCells() {
+        
+        tableView.register(TitleTableViewCell.self, forCellReuseIdentifier: TitleTableViewCell.identifier)
+        
+    }
+    
     private func fetchTitles() {
         viewModel.fetchTitles { [weak self] error in
             if let error = error {
@@ -101,12 +107,12 @@ extension UpcomingSoonViewController: UITableViewDataSource, UITableViewDelegate
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: UpcomingTitleTableViewCell.identifier, for: indexPath) as? UpcomingTitleTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.identifier, for: indexPath) as? TitleTableViewCell else {
             return UITableViewCell()
         }
         
         let title = viewModel.titles[indexPath.row]
-        cell.configure(with: title)
+        cell.configure(with: title, imageRequest: viewModel.imageRequest)
         
         return cell
     }
@@ -121,6 +127,15 @@ extension UpcomingSoonViewController: UITableViewDataSource, UITableViewDelegate
 #if DEBUG
 import SwiftUI
 import Core
+
+struct DummyImageRequest: ImageRequestProtocol {
+    
+    var baseURL: String {
+        return ""
+    }
+    
+}
+
 struct UpcomingViewControllerPreviews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {
@@ -142,6 +157,7 @@ struct UpcomingViewControllerPreviews: PreviewProvider {
         func makeUIViewController(context: Context) -> UIViewControllerType {
             let viewModel = UpcomingSoonViewModel(
                 upcomingSoonService: DummyUpcomingSoonService(),
+                imageRequest: DummyImageRequest(),
                 navigation: Navigation()
             )
             

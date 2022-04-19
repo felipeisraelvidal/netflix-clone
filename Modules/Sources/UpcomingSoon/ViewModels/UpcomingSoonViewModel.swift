@@ -4,6 +4,7 @@ import Core
 public final class UpcomingSoonViewModel {
     
     private let upcomingSoonService: UpcomingSoonServiceProtocol
+    let imageRequest: ImageRequestProtocol
     
     private weak var navigation: UpcomingSoonNavigation?
     
@@ -13,9 +14,11 @@ public final class UpcomingSoonViewModel {
     
     public init(
         upcomingSoonService: UpcomingSoonServiceProtocol,
+        imageRequest: ImageRequestProtocol,
         navigation: UpcomingSoonNavigation
     ) {
         self.upcomingSoonService = upcomingSoonService
+        self.imageRequest = imageRequest
         self.navigation = navigation
     }
     

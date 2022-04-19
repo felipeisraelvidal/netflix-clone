@@ -225,9 +225,12 @@ class HeroView: UIView {
         
     }
     
-    public func configure(with title: Title) {
-        self.title = title
-        imageView.sd_setImage(with: title.posterURL, completed: nil)
+    public func configure(with model: Title, imageRequest: ImageRequestProtocol) {
+        self.title = model
+        
+        if let path = model.posterPath, let url = URL(string: "\(imageRequest.baseURL)/\(path)") {
+            imageView.sd_setImage(with: url, completed: nil)
+        }
     }
     
     private func playTitle() {

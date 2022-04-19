@@ -114,23 +114,23 @@ public class HomeViewController: UIViewController {
     }
     
     private func setupHeroView() {
-        viewModel.fetchHeroTitle { [weak self] result in
+        viewModel.fetchHeroTitle { [unowned self] result in
             switch result {
             case .success(let title):
                 guard let title = title else { return }
 
-                self?.heroView?.configure(with: title)
+                self.heroView?.configure(with: title, imageRequest: self.viewModel.imageRequest)
 
-                self?.heroView?.playButtonTapped = { [weak self] title in
-                    self?.viewModel.playTitle(title)
+                self.heroView?.playButtonTapped = { title in
+                    self.viewModel.playTitle(title)
                 }
 
-                self?.heroView?.downloadButtonTapped = { [weak self] title in
-                    self?.viewModel.downloadTitle(title)
+                self.heroView?.downloadButtonTapped = { title in
+                    self.viewModel.downloadTitle(title)
                 }
 
-                self?.heroView?.aboutButtonTapped = { [weak self] title in
-                    self?.viewModel.goToTitleDetails(title: title)
+                self.heroView?.aboutButtonTapped = { title in
+                    self.viewModel.goToTitleDetails(title: title)
                 }
             case .failure(let error):
                 print(error.localizedDescription)
@@ -174,10 +174,11 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         let section = viewModel.sections[indexPath.section]
-        section.fetchHandler { result in
+        section.fetchHandler { [unowned self] result in
             switch result {
             case .success(let titles):
                 let viewModel = CollectionTableViewCellViewModel(
+                    imageRequest: self.viewModel.imageRequest,
                     titles: titles
                 )
                 cell.configure(with: viewModel)
@@ -207,6 +208,13 @@ extension HomeViewController: CollectionTableViewCellDelegate {
 #if DEBUG
 import SwiftUI
 import Core
+
+struct DummyImageRequest: ImageRequestProtocol {
+    var baseURL: String {
+        return ""
+    }
+}
+
 struct HomeViewControllerPreviews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {
@@ -230,6 +238,7 @@ struct HomeViewControllerPreviews: PreviewProvider {
         func makeUIViewController(context: Context) -> UIViewControllerType {
             let viewModel = HomeViewModel(
                 homeService: DummyHomeService(),
+                imageRequest: DummyImageRequest(),
                 navigation: Navigation()
             )
             

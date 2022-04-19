@@ -68,7 +68,7 @@ let package = Package(
             dependencies: ["TitlePlayer"]),
         .target(
             name: "UpcomingSoon",
-            dependencies: ["Core", "SDWebImage"]),
+            dependencies: ["Core", "CoreUI", "SDWebImage"]),
         .testTarget(
             name: "UpcomingSoonTests",
             dependencies: ["UpcomingSoon"]),

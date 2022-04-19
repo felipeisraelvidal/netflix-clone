@@ -24,6 +24,7 @@ final class UpcomingSoonCoordinator: Coordinator {
     func start() {
         let viewModel = UpcomingSoonViewModel(
             upcomingSoonService: UpcomingSoonService(),
+            imageRequest: ImageRequest(),
             navigation: self
         )
         

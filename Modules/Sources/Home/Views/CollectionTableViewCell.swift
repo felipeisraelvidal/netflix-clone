@@ -72,11 +72,12 @@ extension CollectionTableViewCell: UICollectionViewDataSource, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let title = viewModel?.titles[indexPath.item],
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TitleCollectionViewCell.identifier, for: indexPath) as? TitleCollectionViewCell else {
+              let imageRequest = viewModel?.imageRequest,
+              let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TitleCollectionViewCell.identifier, for: indexPath) as? TitleCollectionViewCell else {
             return UICollectionViewCell()
         }
         
-        cell.configure(with: title)
+        cell.configure(with: title, imageRequest: imageRequest)
         
         return cell
     }

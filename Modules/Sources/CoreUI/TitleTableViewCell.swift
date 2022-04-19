@@ -1,10 +1,9 @@
 import UIKit
 import Core
-import SDWebImage
 
-class UpcomingTitleTableViewCell: UITableViewCell {
+public class TitleTableViewCell: UITableViewCell {
     
-    static let identifier = "UpcomingTitleTableViewCell"
+    public static let identifier = "TitleTableViewCell"
     
     private lazy var backdropImageView: UIImageView = {
         let imageView = UIImageView()
@@ -126,12 +125,12 @@ class UpcomingTitleTableViewCell: UITableViewCell {
     
     // MARK: - Public methods
     
-    func configure(with model: Title) {
+    public func configure(with model: Title, imageRequest: ImageRequestProtocol) {
         nameLabel.text = model.safeName
         overviewLabel.text = model.overview
         
         loadingIndicator.startAnimating()
-        if let urlString = model.backdropPath, let url = URL(string: urlString) {
+        if let path = model.backdropPath, let url = URL(string: "\(imageRequest.baseURL)/\(path)") {
             backdropImageView.sd_setImage(with: url) { [weak self] _, _, _, _ in
                 self?.loadingIndicator.stopAnimating()
             }

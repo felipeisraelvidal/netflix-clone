@@ -53,10 +53,12 @@ public class TitleCollectionViewCell: UICollectionViewCell {
         
     }
     
-    public func configure(with title: Title) {
-        nameLabel.text = title.safeName
+    public func configure(with model: Title, imageRequest: ImageRequestProtocol) {
+        nameLabel.text = model.safeName
         
-        imageView.sd_setImage(with: title.posterURL)
+        if let path = model.posterPath, let url = URL(string: "\(imageRequest.baseURL)/\(path)") {
+            imageView.sd_setImage(with: url)
+        }
     }
     
 }

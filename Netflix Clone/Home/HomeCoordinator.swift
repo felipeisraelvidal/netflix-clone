@@ -26,6 +26,7 @@ final class HomeCoordinator: Coordinator {
         
         let viewModel = HomeViewModel(
             homeService: HomeService(),
+            imageRequest: ImageRequest(),
             navigation: self
         )
         

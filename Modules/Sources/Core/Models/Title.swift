@@ -5,8 +5,6 @@ public struct TitleResponse: Codable {
 }
 
 public struct Title: Codable {
-    private let baseImageURL = "https://image.tmdb.org/t/p/w500"
-    
     public let id: Int
     public let mediaType: String?
     public let originalName: String?
@@ -20,13 +18,6 @@ public struct Title: Codable {
     
     public var safeName: String {
         originalTitle ?? originalName ?? "Unknown name"
-    }
-    
-    public var posterURL: URL? {
-        if let posterPath = posterPath {
-            return URL(string: "\(baseImageURL)\(posterPath)")
-        }
-        return nil
     }
     
     enum CodingKeys: String, CodingKey {

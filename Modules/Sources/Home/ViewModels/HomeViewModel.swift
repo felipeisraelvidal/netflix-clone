@@ -5,6 +5,7 @@ import Core
 public final class HomeViewModel {
     
     private let homeService: HomeServiceProtocol
+    let imageRequest: ImageRequestProtocol
     
     weak var navigation: HomeNavigation!
     
@@ -12,9 +13,11 @@ public final class HomeViewModel {
     
     public init(
         homeService: HomeServiceProtocol,
+        imageRequest: ImageRequestProtocol,
         navigation: HomeNavigation
     ) {
         self.homeService = homeService
+        self.imageRequest = imageRequest
         self.navigation = navigation
         
         homeService.buildSections { [weak self] sections in
