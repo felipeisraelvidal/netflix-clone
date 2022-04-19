@@ -1,9 +1,5 @@
 import Foundation
 
-public struct TitleResponse: Codable {
-    public let results: [Title]
-}
-
 public struct Title: Codable {
     public let id: Int
     public let mediaType: String?

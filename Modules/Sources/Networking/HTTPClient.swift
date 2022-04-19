@@ -11,7 +11,6 @@ public final class HTTPClient<T: Decodable> {
             }
             
             if let parameters = request.parameters {
-                print(parameters)
                 baseURL.queryItems = parameters.map({ URLQueryItem(name: $0.key, value: $0.value) })
             }
             
