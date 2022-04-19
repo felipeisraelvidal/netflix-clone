@@ -58,7 +58,10 @@ struct HomeService: HomeServiceProtocol {
         client.request(request: request) { result in
             switch result {
             case .success(let response):
-                completion(.success(response.results))
+                var results = response.results
+                results.mapProperty(\.mediaType, value: "movie")
+                
+                completion(.success(results))
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -72,7 +75,10 @@ struct HomeService: HomeServiceProtocol {
         client.request(request: request) { result in
             switch result {
             case .success(let response):
-                completion(.success(response.results))
+                var results = response.results
+                results.mapProperty(\.mediaType, value: "tv")
+                
+                completion(.success(results))
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -93,7 +99,10 @@ struct HomeService: HomeServiceProtocol {
         client.request(request: movieRequest) { result in
             switch result {
             case .success(let response):
-                titles.append(contentsOf: response.results)
+                var results = response.results
+                results.mapProperty(\.mediaType, value: "movie")
+                
+                titles.append(contentsOf: results)
                 group.leave()
             case .failure(let err):
                 error = err
@@ -107,7 +116,10 @@ struct HomeService: HomeServiceProtocol {
         client.request(request: tvRequest) { result in
             switch result {
             case .success(let response):
-                titles.append(contentsOf: response.results)
+                var results = response.results
+                results.mapProperty(\.mediaType, value: "tv")
+                
+                titles.append(contentsOf: results)
                 group.leave()
             case .failure(let err):
                 error = err
@@ -131,7 +143,10 @@ struct HomeService: HomeServiceProtocol {
         client.request(request: request) { result in
             switch result {
             case .success(let response):
-                completion(.success(response.results))
+                var results = response.results
+                results.mapProperty(\.mediaType, value: "movie")
+                
+                completion(.success(results))
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -152,7 +167,10 @@ struct HomeService: HomeServiceProtocol {
         client.request(request: movieRequest) { result in
             switch result {
             case .success(let response):
-                titles.append(contentsOf: response.results)
+                var results = response.results
+                results.mapProperty(\.mediaType, value: "movie")
+                
+                titles.append(contentsOf: results)
                 group.leave()
             case .failure(let err):
                 error = err
@@ -166,7 +184,10 @@ struct HomeService: HomeServiceProtocol {
         client.request(request: tvRequest) { result in
             switch result {
             case .success(let response):
-                titles.append(contentsOf: response.results)
+                var results = response.results
+                results.mapProperty(\.mediaType, value: "tv")
+                
+                titles.append(contentsOf: results)
                 group.leave()
             case .failure(let err):
                 error = err

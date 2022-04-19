@@ -12,7 +12,10 @@ struct UpcomingSoonService: UpcomingSoonServiceProtocol {
         client.request(request: request) { result in
             switch result {
             case .success(let response):
-                completion(.success(response.results))
+                var results = response.results
+                results.mapProperty(\.mediaType, value: "movie")
+                
+                completion(.success(results))
             case .failure(let error):
                 completion(.failure(error))
             }

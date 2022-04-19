@@ -2,7 +2,7 @@ import Foundation
 
 public struct Title: Codable {
     public let id: Int
-    public let mediaType: String?
+    public var mediaType: String?
     public let originalName: String?
     public let originalTitle: String?
     public let posterPath: String?
