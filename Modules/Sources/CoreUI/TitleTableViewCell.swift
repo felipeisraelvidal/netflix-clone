@@ -67,12 +67,20 @@ public class TitleTableViewCell: UITableViewCell {
         return button
     }()
     
+    private lazy var selectionView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .systemGray
+        return view
+    }()
+    
     // MARK: - Initializers
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         backgroundColor = .black
+        
+        selectedBackgroundView = selectionView
         
         contentView.addSubview(backdropImageView)
         contentView.addSubview(loadingIndicator)
