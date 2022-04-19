@@ -28,6 +28,7 @@
 		55895B31277260A900395212 /* DownloadsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55895B30277260A900395212 /* DownloadsViewController.swift */; };
 		55895B3827726A6400395212 /* CollectionViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55895B3727726A6400395212 /* CollectionViewTableViewCell.swift */; };
 		55895B3A277270A300395212 /* HeroHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55895B39277270A200395212 /* HeroHeaderView.swift */; };
+		558B483D280EE52700009AAC /* UpcomingSoonRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558B483C280EE52700009AAC /* UpcomingSoonRequest.swift */; };
 		5596A7DA280CE18800E3AD81 /* UpcomingSoonCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5596A7D9280CE18800E3AD81 /* UpcomingSoonCoordinator.swift */; };
 		5596A7DD280D1CD100E3AD81 /* UpcomingSoonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5596A7DC280D1CD100E3AD81 /* UpcomingSoonService.swift */; };
 		5596A7E3280D24FD00E3AD81 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5596A7E2280D24FD00E3AD81 /* Constants.swift */; };
@@ -92,6 +93,7 @@
 		55895B30277260A900395212 /* DownloadsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsViewController.swift; sourceTree = "<group>"; };
 		55895B3727726A6400395212 /* CollectionViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewTableViewCell.swift; sourceTree = "<group>"; };
 		55895B39277270A200395212 /* HeroHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroHeaderView.swift; sourceTree = "<group>"; };
+		558B483C280EE52700009AAC /* UpcomingSoonRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingSoonRequest.swift; sourceTree = "<group>"; };
 		5596A7D9280CE18800E3AD81 /* UpcomingSoonCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingSoonCoordinator.swift; sourceTree = "<group>"; };
 		5596A7DC280D1CD100E3AD81 /* UpcomingSoonService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingSoonService.swift; sourceTree = "<group>"; };
 		5596A7E2280D24FD00E3AD81 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -326,9 +328,18 @@
 			path = Managers;
 			sourceTree = "<group>";
 		};
+		558B483B280EE51800009AAC /* Requests */ = {
+			isa = PBXGroup;
+			children = (
+				558B483C280EE52700009AAC /* UpcomingSoonRequest.swift */,
+			);
+			path = Requests;
+			sourceTree = "<group>";
+		};
 		5596A7D8280CE0EC00E3AD81 /* UpcomingSoon */ = {
 			isa = PBXGroup;
 			children = (
+				558B483B280EE51800009AAC /* Requests */,
 				5596A7DB280D1CC600E3AD81 /* Services */,
 				5596A7D9280CE18800E3AD81 /* UpcomingSoonCoordinator.swift */,
 			);
@@ -518,6 +529,7 @@
 				55FE1203277A2FE50031E404 /* UIFont+Extensions.swift in Sources */,
 				5596A7E5280D280000E3AD81 /* HomeTrendingMoviesRequest.swift in Sources */,
 				5580B95B280B499600B10D9D /* TitlePreviewCoordinator.swift in Sources */,
+				558B483D280EE52700009AAC /* UpcomingSoonRequest.swift in Sources */,
 				55895B3827726A6400395212 /* CollectionViewTableViewCell.swift in Sources */,
 				55895B31277260A900395212 /* DownloadsViewController.swift in Sources */,
 				556F84E12805AD200034CE8E /* AppCoordinator.swift in Sources */,
