@@ -24,14 +24,22 @@ final class HomeCoordinator: Coordinator {
         
         rootViewController.navigationBar.barStyle = .black
         
+        let imageRequest = ImageRequest()
+        
         let viewModel = HomeViewModel(
             homeService: HomeService(),
-            imageRequest: ImageRequest(),
+            imageRequest: imageRequest,
             navigation: self
         )
         
+        let heroViewModel = HeroViewModel(
+            heroService: HeroService(),
+            imageRequest: imageRequest
+        )
+        
         let viewController = HomeViewController(
-            viewModel: viewModel
+            viewModel: viewModel,
+            heroViewModel: heroViewModel
         )
         
         rootViewController.tabBarItem = UITabBarItem(

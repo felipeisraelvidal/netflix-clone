@@ -3,6 +3,7 @@ import UIKit
 public class HomeViewController: UIViewController {
     
     private var viewModel: HomeViewModel
+    private var heroViewModel: HeroViewModel
     
     private var kTableHeroHeight: CGFloat = 450
     
@@ -21,8 +22,12 @@ public class HomeViewController: UIViewController {
     private var heroView: HeroView?
     
     // MARK: - Initializers
-    public init(viewModel: HomeViewModel) {
+    public init(
+        viewModel: HomeViewModel,
+        heroViewModel: HeroViewModel
+    ) {
         self.viewModel = viewModel
+        self.heroViewModel = heroViewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -41,10 +46,22 @@ public class HomeViewController: UIViewController {
         
         configureHeroView()
         updateHeroView()
-        setupHeroView()
+//        setupHeroView()
         
         tableView.dataSource = self
         tableView.delegate = self
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        heroViewModel.startTimer()
+    }
+    
+    public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        heroViewModel.pauseTimer()
     }
     
     public override func loadView() {
@@ -96,11 +113,34 @@ public class HomeViewController: UIViewController {
     private func configureHeroView() {
         kTableHeroHeight = view.bounds.height * 0.6
         
-        heroView = HeroView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: kTableHeroHeight))
+        heroView = HeroView(
+            viewModel: heroViewModel,
+            frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: kTableHeroHeight)
+        )
         tableView.tableHeaderView = nil
         tableView.addSubview(heroView!)
         tableView.contentInset = UIEdgeInsets(top: kTableHeroHeight, left: 0, bottom: 0, right: 0)
         tableView.contentOffset = CGPoint(x: 0, y: -kTableHeroHeight)
+        
+        heroViewModel.fetchTitles { error in
+            if let error = error {
+                print(error.localizedDescription)
+            } else {
+                self.heroViewModel.startTimer()
+            }
+        }
+        
+        self.heroView?.playButtonTapped = { title in
+            self.viewModel.playTitle(title)
+        }
+
+        self.heroView?.downloadButtonTapped = { title in
+            self.viewModel.downloadTitle(title)
+        }
+
+        self.heroView?.aboutButtonTapped = { title in
+            self.viewModel.goToTitleDetails(title: title)
+        }
     }
     
     private func updateHeroView() {
@@ -111,31 +151,6 @@ public class HomeViewController: UIViewController {
         }
         
         heroView?.frame = headerRect
-    }
-    
-    private func setupHeroView() {
-        viewModel.fetchHeroTitle { [unowned self] result in
-            switch result {
-            case .success(let title):
-                guard let title = title else { return }
-
-                self.heroView?.configure(with: title, imageRequest: self.viewModel.imageRequest)
-
-                self.heroView?.playButtonTapped = { title in
-                    self.viewModel.playTitle(title)
-                }
-
-                self.heroView?.downloadButtonTapped = { title in
-                    self.viewModel.downloadTitle(title)
-                }
-
-                self.heroView?.aboutButtonTapped = { title in
-                    self.viewModel.goToTitleDetails(title: title)
-                }
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
     }
     
     // MARK: - Functions
@@ -242,8 +257,14 @@ struct HomeViewControllerPreviews: PreviewProvider {
                 navigation: Navigation()
             )
             
+            let heroViewModel = HeroViewModel(
+                heroService: DummyHeroService(),
+                imageRequest: DummyImageRequest()
+            )
+            
             let viewController = HomeViewController(
-                viewModel: viewModel
+                viewModel: viewModel,
+                heroViewModel: heroViewModel
             )
             let navController = UINavigationController(rootViewController: viewController)
             return navController

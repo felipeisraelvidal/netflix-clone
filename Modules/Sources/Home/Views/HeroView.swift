@@ -4,13 +4,14 @@ import Core
 
 class HeroView: UIView {
     
-    private var title: Title?
+    private var viewModel: HeroViewModel
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .black
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
+        imageView.sd_imageTransition = .fade
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -129,7 +130,8 @@ class HeroView: UIView {
     var downloadButtonTapped: ((Title) -> Void)?
     var aboutButtonTapped: ((Title) -> Void)?
     
-    override init(frame: CGRect) {
+    init(viewModel: HeroViewModel, frame: CGRect) {
+        self.viewModel = viewModel
         super.init(frame: frame)
         
         backgroundColor = .black
@@ -139,6 +141,12 @@ class HeroView: UIView {
         addGradient()
         
         setupButtons()
+        
+        viewModel.updateView = { [weak self] title in
+            if let path = title.posterPath, let url = URL(string: "\(viewModel.imageRequest.baseURL)/\(path)") {
+                self?.imageView.sd_setImage(with: url, completed: nil)
+            }
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -225,26 +233,18 @@ class HeroView: UIView {
         
     }
     
-    public func configure(with model: Title, imageRequest: ImageRequestProtocol) {
-        self.title = model
-        
-        if let path = model.posterPath, let url = URL(string: "\(imageRequest.baseURL)/\(path)") {
-            imageView.sd_setImage(with: url, completed: nil)
-        }
-    }
-    
     private func playTitle() {
-        guard let title = title else { return }
+        guard let title = viewModel.currentTitle else { return }
         playButtonTapped?(title)
     }
     
     private func downloadTitle() {
-        guard let title = title else { return }
+        guard let title = viewModel.currentTitle else { return }
         downloadButtonTapped?(title)
     }
     
     private func aboutTitle() {
-        guard let title = title else { return }
+        guard let title = viewModel.currentTitle else { return }
         aboutButtonTapped?(title)
     }
     
@@ -269,14 +269,18 @@ struct HeroHeaderViewPreviews: PreviewProvider {
         ContainerPreview()
             .previewLayout(.fixed(width: 375, height: 450))
     }
-    
+
     struct ContainerPreview: UIViewRepresentable {
         typealias UIViewControllerType = UIView
-        
+
         func makeUIView(context: Context) -> some UIView {
-            return HeroView(frame: CGRect(x: 0, y: 0, width: 375, height: 450))
+            let viewModel = HeroViewModel(
+                heroService: DummyHeroService(),
+                imageRequest: DummyImageRequest()
+            )
+            return HeroView(viewModel: viewModel, frame: CGRect(x: 0, y: 0, width: 375, height: 450))
         }
-        
+
         func updateUIView(_ uiView: UIViewType, context: Context) {}
     }
 }

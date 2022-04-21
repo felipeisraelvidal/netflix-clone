@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		55158CC928119C0100090E6B /* HeroService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55158CC828119C0100090E6B /* HeroService.swift */; };
 		5535288E27BEA06300D8A2E9 /* Modules in Frameworks */ = {isa = PBXBuildFile; productRef = 5535288D27BEA06300D8A2E9 /* Modules */; };
 		556F84DE2805AC340034CE8E /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556F84DD2805AC340034CE8E /* Coordinator.swift */; };
 		556F84E12805AD200034CE8E /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556F84E02805AD200034CE8E /* AppCoordinator.swift */; };
@@ -66,6 +67,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		55158CC828119C0100090E6B /* HeroService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroService.swift; sourceTree = "<group>"; };
 		5535288B27BE820D00D8A2E9 /* Modules */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Modules; sourceTree = "<group>"; };
 		556F84DD2805AC340034CE8E /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		556F84E02805AD200034CE8E /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 			isa = PBXGroup;
 			children = (
 				556F84E62805B6F60034CE8E /* HomeService.swift */,
+				55158CC828119C0100090E6B /* HeroService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -527,6 +530,7 @@
 				55895B31277260A900395212 /* DownloadsViewController.swift in Sources */,
 				556F84E12805AD200034CE8E /* AppCoordinator.swift in Sources */,
 				55895AFA27725DCF00395212 /* AppDelegate.swift in Sources */,
+				55158CC928119C0100090E6B /* HeroService.swift in Sources */,
 				5580B95F280B665000B10D9D /* TitlePlayerCoordinator.swift in Sources */,
 				5596A7E9280D291D00E3AD81 /* HomePopularMoviesRequest.swift in Sources */,
 				5596A7E3280D24FD00E3AD81 /* Constants.swift in Sources */,
