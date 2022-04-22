@@ -12,6 +12,7 @@ public struct Title: Codable {
     public let voteAverage: Double
     public let backdropPath: String?
     public let popularity: Double?
+    public let genres: [Genre]?
     
     public var safeName: String {
         originalTitle ?? originalName ?? "Unknown name"
@@ -30,6 +31,7 @@ public struct Title: Codable {
         case voteAverage = "vote_average"
         case backdropPath = "backdrop_path"
         case popularity = "popularity"
+        case genres
     }
     
     public init(
@@ -51,5 +53,11 @@ public struct Title: Codable {
         self.voteAverage = 0
         self.backdropPath = backdropPath
         self.popularity = nil
+        self.genres = nil
     }
+}
+
+public struct Genre: Codable {
+    private let id: Int
+    private let name: String
 }

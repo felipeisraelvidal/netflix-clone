@@ -51,7 +51,7 @@ let package = Package(
             dependencies: ["Home"]),
         .target(
             name: "TitlePreview",
-            dependencies: ["Core"]),
+            dependencies: ["Core", "SDWebImage"]),
         .testTarget(
             name: "TitlePreviewTests",
             dependencies: ["TitlePreview"]),

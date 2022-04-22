@@ -12,6 +12,7 @@ struct DummyTitlePreviewService: TitlePreviewServiceProtocol {
         let title: Title = .init(
             id: 0,
             mediaType: "movie",
+            backdropPath: "/iQFcwSGbZXMkeyKrxbPnwnRo5fl.jpg",
             originalName: "Harry Potter",
             overview: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
         )

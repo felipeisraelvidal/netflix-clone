@@ -1,28 +1,39 @@
 import UIKit
 import WebKit
 import Core
+import SDWebImage
 
 public class TitlePreviewViewController: UIViewController {
     
     private var viewModel: TitlePreviewViewModel
     
-    private let webView: WKWebView = {
-        let webView = WKWebView()
-        webView.translatesAutoresizingMaskIntoConstraints = false
-        return webView
+    private lazy var kTableHeroHeight: CGFloat = {
+        return (9 * view.bounds.width) / 16
     }()
     
-    private let tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.backgroundColor = .black
         tableView.allowsSelection = false
         tableView.separatorStyle = .none
-        
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        tableView.register(TopInfoTableViewCell.self, forCellReuseIdentifier: TopInfoTableViewCell.identifier)
-        
+        tableView.dataSource = self
+        tableView.delegate = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
+    }()
+    
+    private lazy var tableHeaderView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .systemBlue
+        return view
+    }()
+    
+    private lazy var backdropImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     
     // MARK: - Initializers
@@ -41,12 +52,16 @@ public class TitlePreviewViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Loading..."
+        
         configureNavigationBar()
         
-        view.backgroundColor = .black
+        configureBackdropView()
+        updateBackdropView()
         
-        tableView.dataSource = self
-        tableView.delegate = self
+        registerCells()
+        
+        view.backgroundColor = .black
         
         getTitleDetails()
     }
@@ -61,17 +76,17 @@ public class TitlePreviewViewController: UIViewController {
     
     private func setupConstraints() {
         
-        view.addSubview(webView)
+        tableHeaderView.addSubview(backdropImageView)
         NSLayoutConstraint.activate([
-            webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            webView.heightAnchor.constraint(equalTo: webView.widthAnchor, multiplier: 9/16)
+            backdropImageView.topAnchor.constraint(equalTo: tableHeaderView.topAnchor),
+            backdropImageView.leadingAnchor.constraint(equalTo: tableHeaderView.leadingAnchor),
+            backdropImageView.trailingAnchor.constraint(equalTo: tableHeaderView.trailingAnchor),
+            backdropImageView.bottomAnchor.constraint(equalTo: tableHeaderView.bottomAnchor)
         ])
         
         view.addSubview(tableView)
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: webView.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -87,8 +102,36 @@ public class TitlePreviewViewController: UIViewController {
         
     }
     
+    private func configureBackdropView() {
+        tableHeaderView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: kTableHeroHeight)
+        tableView.addSubview(tableHeaderView)
+        tableView.contentInset = UIEdgeInsets(top: kTableHeroHeight, left: 0, bottom: 0, right: 0)
+        tableView.contentOffset = CGPoint(x: 0, y: -kTableHeroHeight)
+    }
+    
+    private func updateBackdropView() {
+        var headerRect = CGRect(x: 0, y: -kTableHeroHeight, width: view.bounds.width, height: kTableHeroHeight)
+        if tableView.contentOffset.y < -kTableHeroHeight {
+            headerRect.origin.y = tableView.contentOffset.y
+            headerRect.size.height = -tableView.contentOffset.y
+        }
+        
+        tableHeaderView.frame = headerRect
+    }
+    
+    private func registerCells() {
+        
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(TopInfoTableViewCell.self, forCellReuseIdentifier: TopInfoTableViewCell.identifier)
+        
+    }
+    
     private func configureLabels(with model: Title) {
         self.title = model.safeName
+        
+        if let path = model.backdropPath, let url = URL(string: "\(viewModel.imageRequest.baseURL)/\(path)") {
+            backdropImageView.sd_setImage(with: url)
+        }
         
         tableView.reloadData()
     }
@@ -105,8 +148,6 @@ public class TitlePreviewViewController: UIViewController {
             }
         }
     }
-    
-    // MARK: - Actions
     
 }
 
@@ -137,10 +178,21 @@ extension TitlePreviewViewController: UITableViewDataSource, UITableViewDelegate
         }
     }
     
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        updateBackdropView()
+    }
+    
 }
 
 #if DEBUG
 import SwiftUI
+
+struct DummyImageRequest: ImageRequestProtocol {
+    var baseURL: String {
+        return "https://image.tmdb.org/t/p/original"
+    }
+}
+
 struct TitlePreviewViewControllerPreviews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {
@@ -159,7 +211,8 @@ struct TitlePreviewViewControllerPreviews: PreviewProvider {
             let viewModel = TitlePreviewViewModel(
                 titleID: 0,
                 mediaType: "movie",
-                titlePreviewService: DummyTitlePreviewService()
+                titlePreviewService: DummyTitlePreviewService(),
+                imageRequest: DummyImageRequest()
             )
             let viewController = TitlePreviewViewController(
                 viewModel: viewModel

@@ -6,6 +6,7 @@ public final class TitlePreviewViewModel {
     private let titleID: Int
     private let mediaType: String
     private let titlePreviewService: TitlePreviewServiceProtocol
+    let imageRequest: ImageRequestProtocol
     
     private(set) var title: Title?
     
@@ -14,11 +15,13 @@ public final class TitlePreviewViewModel {
     public init(
         titleID: Int,
         mediaType: String,
-        titlePreviewService: TitlePreviewServiceProtocol
+        titlePreviewService: TitlePreviewServiceProtocol,
+        imageRequest: ImageRequestProtocol
     ) {
         self.titleID = titleID
         self.mediaType = mediaType
         self.titlePreviewService = titlePreviewService
+        self.imageRequest = imageRequest
     }
     
     // MARK: - Public methods

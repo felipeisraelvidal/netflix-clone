@@ -63,7 +63,8 @@ final class HomeCoordinator: Coordinator {
         let viewModel = TitlePreviewViewModel(
             titleID: title.id,
             mediaType: title.mediaType ?? "",
-            titlePreviewService: TitlePreviewService()
+            titlePreviewService: TitlePreviewService(),
+            imageRequest: ImageRequest()
         )
         
         let viewController = TitlePreviewViewController(
