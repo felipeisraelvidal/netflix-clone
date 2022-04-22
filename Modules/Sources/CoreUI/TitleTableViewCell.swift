@@ -5,6 +5,10 @@ public class TitleTableViewCell: UITableViewCell {
     
     public static let identifier = "TitleTableViewCell"
     
+    private var title: Title?
+    
+    public var didTapPlayButton: ((Title) -> Void)?
+    
     private lazy var backdropImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -62,6 +66,8 @@ public class TitleTableViewCell: UITableViewCell {
             button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
             button.backgroundColor = .clear
         }
+        
+        button.addTarget(self, action: #selector(handlePlayButton(_:)), for: .touchUpInside)
         
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -134,6 +140,8 @@ public class TitleTableViewCell: UITableViewCell {
     // MARK: - Public methods
     
     public func configure(with model: Title, imageRequest: ImageRequestProtocol) {
+        self.title = model
+        
         nameLabel.text = model.safeName
         overviewLabel.text = model.overview
         
@@ -143,6 +151,13 @@ public class TitleTableViewCell: UITableViewCell {
                 self?.loadingIndicator.stopAnimating()
             }
         }
+    }
+    
+    // MARK: - Private methods
+    
+    @objc private func handlePlayButton(_ sender: UIButton) {
+        guard let title = title else { return }
+         didTapPlayButton?(title)
     }
     
 }

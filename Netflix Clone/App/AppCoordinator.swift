@@ -40,14 +40,11 @@ final class AppCoordinator: Coordinator {
         
         // Top Searches
         
-        let topSearchesViewController = UIViewController()
-        topSearchesViewController.view.backgroundColor = .systemPink
+        let topSearchesCoordinator = TopSearchesCoordinator(rootViewController: UINavigationController())
+        topSearchesCoordinator.parentCoordinator = self
+        childCoordinators.append(topSearchesCoordinator)
         
-        topSearchesViewController.tabBarItem = UITabBarItem(
-            title: "Top Searches",
-            image: .init(systemName: "magnifyingglass"),
-            tag: 2
-        )
+        topSearchesCoordinator.start()
         
         // Downloads
         
@@ -65,7 +62,7 @@ final class AppCoordinator: Coordinator {
         rootViewController.viewControllers = [
             homeCoordinator.rootViewController,
             upcomingSoonCoordinator.rootViewController,
-            topSearchesViewController,
+            topSearchesCoordinator.rootViewController,
             downloadsViewController
         ]
     }

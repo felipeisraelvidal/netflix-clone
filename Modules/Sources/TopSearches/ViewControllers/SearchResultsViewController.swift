@@ -1,26 +1,15 @@
-//
-//  SearchResultsViewController.swift
-//  Netflix Clone
-//
-//  Created by Felipe Vidal on 08/01/22.
-//
-
 import UIKit
-import Core
-
-protocol SearchResultsViewControllerDelegate: AnyObject {
-    func searchResultsViewControllerDidTapTitle(_ title: Title)
-}
+import CoreUI
 
 class SearchResultsViewController: UIViewController {
     
+    private let viewModel: SearchResultsViewModel
+    
     private let numberOfColumns = 3
     
-    public var titles: [Title] = []
+    weak var delegate: SearchResultsViewControllerDelegate?
     
-    public weak var delegate: SearchResultsViewControllerDelegate?
-    
-    public let collectionView: UICollectionView = {
+    private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 8
         layout.minimumInteritemSpacing = 8
@@ -28,38 +17,72 @@ class SearchResultsViewController: UIViewController {
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .black
-        
-        collectionView.register(TitleCollectionViewCell.self, forCellWithReuseIdentifier: TitleCollectionViewCell.identifier)
-        
+        collectionView.dataSource = self
+        collectionView.delegate = self
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
+    
+    // MARK: - Initializers
+    
+    init(viewModel: SearchResultsViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         view.backgroundColor = .black
-        
-        view.addSubview(collectionView)
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        
-        applyConstraints()
     }
     
-    // MARK: - Functions
+    override func loadView() {
+        super.loadView()
+        
+        applyConstraints()
+        registerCells()
+    }
+    
+    // MARK: - Private methods
     
     private func applyConstraints() {
-        let collectionViewConstraints = [
+        
+        view.addSubview(collectionView)
+        NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ]
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
         
-        NSLayoutConstraint.activate(collectionViewConstraints)
     }
     
+    private func registerCells() {
+        
+        collectionView.register(TitleCollectionViewCell.self, forCellWithReuseIdentifier: TitleCollectionViewCell.identifier)
+        
+    }
+    
+    // MARK: - Public methods
+    
+    func searchMovies(with searchText: String) {
+        viewModel.searchMovies(with: searchText) { [weak self] error in
+            if let error = error {
+                print(error.localizedDescription)
+            } else {
+                DispatchQueue.main.async {
+                    self?.collectionView.reloadData()
+                }
+            }
+        }
+    }
+
 }
 
 extension SearchResultsViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -69,7 +92,7 @@ extension SearchResultsViewController: UICollectionViewDataSource, UICollectionV
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return titles.count
+        return viewModel.titles.count
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -83,17 +106,16 @@ extension SearchResultsViewController: UICollectionViewDataSource, UICollectionV
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TitleCollectionViewCell.identifier, for: indexPath) as? TitleCollectionViewCell else {
             return UICollectionViewCell()
         }
-
-        let title = titles[indexPath.item]
-        cell.configure(with: title)
+        
+        let title = viewModel.titles[indexPath.row]
+        cell.configure(with: title, imageRequest: viewModel.imageRequest)
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: true)
-        
-        let title = titles[indexPath.item]
-        delegate?.searchResultsViewControllerDidTapTitle(title)
+        let title = viewModel.titles[indexPath.row]
+        delegate?.didSelectTitle(title)
     }
+    
 }
