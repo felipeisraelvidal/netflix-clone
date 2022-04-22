@@ -148,7 +148,7 @@ extension TopSearchesViewController: UITableViewDataSource, UITableViewDelegate 
         cell.configure(with: title, imageRequest: viewModel.imageRequest)
         
         cell.didTapPlayButton = { [weak self] title in
-            self?.viewModel.navigation.goToPlayTitle(title)
+            self?.viewModel.goToTitlePlayer(title: title)
         }
         
         return cell
@@ -156,7 +156,7 @@ extension TopSearchesViewController: UITableViewDataSource, UITableViewDelegate 
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let title = viewModel.titles[indexPath.row]
-        viewModel.navigation.goToTitleDetails(title)
+        viewModel.goToTitleDetails(title: title)
     }
     
 }
@@ -164,7 +164,7 @@ extension TopSearchesViewController: UITableViewDataSource, UITableViewDelegate 
 extension TopSearchesViewController: SearchResultsViewControllerDelegate {
     
     func didSelectTitle(_ title: Title) {
-        viewModel.navigation.goToTitleDetails(title)
+        viewModel.goToTitleDetails(title: title)
     }
     
 }

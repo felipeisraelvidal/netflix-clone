@@ -36,4 +36,14 @@ public final class TopSearchesViewModel {
         }
     }
     
+    // MARK: - Private methods
+    
+    public func goToTitleDetails(title: Title) {
+        navigation?.goToTitleDetails(title)
+    }
+    
+    public func goToTitlePlayer(title: Title) {
+        navigation?.goToPlayTitle(title)
+    }
+    
 }
