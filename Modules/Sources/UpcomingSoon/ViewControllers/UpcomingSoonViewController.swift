@@ -114,6 +114,10 @@ extension UpcomingSoonViewController: UITableViewDataSource, UITableViewDelegate
         let title = viewModel.titles[indexPath.row]
         cell.configure(with: title, imageRequest: viewModel.imageRequest)
         
+        cell.didTapPlayButton = { [weak self] title in
+            self?.viewModel.goToTitlePlayer(title: title)
+        }
+        
         return cell
     }
     
@@ -149,6 +153,7 @@ struct UpcomingViewControllerPreviews: PreviewProvider {
     
     class Navigation: UpcomingSoonNavigation {
         func goToTitleDetails(_ title: Title) {}
+        func goToPlayTitle(_ title: Title) {}
     }
     
     struct ContainerPreview: UIViewControllerRepresentable {

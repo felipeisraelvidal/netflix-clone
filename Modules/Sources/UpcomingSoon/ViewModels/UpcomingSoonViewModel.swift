@@ -40,4 +40,8 @@ public final class UpcomingSoonViewModel {
         navigation?.goToTitleDetails(title)
     }
     
+    public func goToTitlePlayer(title: Title) {
+        navigation?.goToPlayTitle(title)
+    }
+    
 }

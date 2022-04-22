@@ -55,12 +55,30 @@ final class UpcomingSoonCoordinator: Coordinator {
         rootViewController.pushViewController(viewController, animated: true)
     }
     
+    private func presentTitlePlayer(_ title: Title) {
+        let coordinator = TitlePlayerCoordinator(
+            rootViewController: UINavigationController(),
+            title: title
+        )
+        
+        coordinator.parentCoordinator = self
+        childCoordinators.append(coordinator)
+        
+        coordinator.start()
+        
+        rootViewController.topViewController?.present(coordinator.rootViewController, animated: true)
+    }
+    
 }
 
 extension UpcomingSoonCoordinator: UpcomingSoonNavigation {
     
     func goToTitleDetails(_ title: Title) {
         presentTitleDetails(title)
+    }
+    
+    func goToPlayTitle(_ title: Title) {
+        presentTitlePlayer(title)
     }
     
 }
