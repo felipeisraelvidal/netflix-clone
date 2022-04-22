@@ -1,6 +1,6 @@
 import Foundation
 
-struct Constants2 {
+struct Constants {
     
     struct TMDB {
         static let BASE_URL = "https://api.themoviedb.org"

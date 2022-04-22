@@ -4,7 +4,7 @@ import Networking
 struct HomeTrendingTVsRequest: URLRequestProtocol {
     
     var baseURL: String {
-        return Constants2.TMDB.BASE_URL
+        return Constants.TMDB.BASE_URL
     }
     
     var path: String? {
@@ -17,7 +17,7 @@ struct HomeTrendingTVsRequest: URLRequestProtocol {
     
     var parameters: [String : String]? {
         return [
-            "api_key": Constants2.TMDB.API_KEY
+            "api_key": Constants.TMDB.API_KEY
         ]
     }
     
