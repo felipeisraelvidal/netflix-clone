@@ -45,7 +45,9 @@ final class UpcomingSoonCoordinator: Coordinator {
     
     private func presentTitleDetails(_ title: Title) {
         let viewModel = TitlePreviewViewModel(
-            title: title
+            titleID: title.id,
+            mediaType: title.mediaType ?? "",
+            titlePreviewService: TitlePreviewService()
         )
         
         let viewController = TitlePreviewViewController(

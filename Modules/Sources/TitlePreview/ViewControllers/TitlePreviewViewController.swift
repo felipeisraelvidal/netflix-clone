@@ -48,8 +48,7 @@ public class TitlePreviewViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
-        setupConstraints()
-        configureLabels(with: viewModel.title)
+        getTitleDetails()
     }
     
     public override func loadView() {
@@ -90,6 +89,21 @@ public class TitlePreviewViewController: UIViewController {
     
     private func configureLabels(with model: Title) {
         self.title = model.safeName
+        
+        tableView.reloadData()
+    }
+    
+    private func getTitleDetails() {
+        viewModel.getTitleDetails { error in
+            if let error = error {
+                print(error.localizedDescription)
+            } else {
+                guard let title = self.viewModel.title else { return }
+                DispatchQueue.main.async {
+                    self.configureLabels(with: title)
+                }
+            }
+        }
     }
     
     // MARK: - Actions
@@ -109,12 +123,13 @@ extension TitlePreviewViewController: UITableViewDataSource, UITableViewDelegate
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.row {
         case 0:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: TopInfoTableViewCell.identifier, for: indexPath) as? TopInfoTableViewCell else {
+            guard let title = viewModel.title,
+                    let cell = tableView.dequeueReusableCell(withIdentifier: TopInfoTableViewCell.identifier, for: indexPath) as? TopInfoTableViewCell else {
                 return UITableViewCell()
             }
             
             cell.backgroundColor = .black
-            cell.configure(with: viewModel.title)
+            cell.configure(with: title)
             
             return cell
         default:
@@ -142,12 +157,9 @@ struct TitlePreviewViewControllerPreviews: PreviewProvider {
         
         func makeUIViewController(context: Context) -> UIViewControllerType {
             let viewModel = TitlePreviewViewModel(
-                title: .init(
-                    id: 0,
-                    mediaType: "movie",
-                    originalName: "Harry Potter",
-                    overview: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-                )
+                titleID: 0,
+                mediaType: "movie",
+                titlePreviewService: DummyTitlePreviewService()
             )
             let viewController = TitlePreviewViewController(
                 viewModel: viewModel
