@@ -48,14 +48,11 @@ final class AppCoordinator: Coordinator {
         
         // Downloads
         
-        let downloadsViewController = UIViewController()
-        downloadsViewController.view.backgroundColor = .systemPink
+        let downloadedTitlesCoordinator = DownloadedTitlesCoordinator(rootViewController: UINavigationController())
+        downloadedTitlesCoordinator.parentCoordinator = self
+        childCoordinators.append(downloadedTitlesCoordinator)
         
-        downloadsViewController.tabBarItem = UITabBarItem(
-            title: "Downloads",
-            image: .init(systemName: "arrow.down.to.line"),
-            tag: 3
-        )
+        downloadedTitlesCoordinator.start()
         
         //
         
@@ -63,7 +60,7 @@ final class AppCoordinator: Coordinator {
             homeCoordinator.rootViewController,
             upcomingSoonCoordinator.rootViewController,
             topSearchesCoordinator.rootViewController,
-            downloadsViewController
+            downloadedTitlesCoordinator.rootViewController
         ]
     }
     

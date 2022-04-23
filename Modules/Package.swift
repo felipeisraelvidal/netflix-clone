@@ -16,7 +16,8 @@ let package = Package(
                 "ProfilePicker",
                 "TitlePlayer",
                 "UpcomingSoon",
-                "TopSearches"
+                "TopSearches",
+                "DownloadedTitles"
             ]
         ),
     ],
@@ -79,5 +80,11 @@ let package = Package(
         .testTarget(
             name: "TopSearchesTests",
             dependencies: ["TopSearches"]),
+        .target(
+            name: "DownloadedTitles",
+            dependencies: ["Core", "CoreUI"]),
+        .testTarget(
+            name: "DownloadedTitlesTests",
+            dependencies: ["DownloadedTitles"]),
     ]
 )
