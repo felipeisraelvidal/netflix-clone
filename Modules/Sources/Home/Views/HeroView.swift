@@ -6,7 +6,7 @@ class HeroView: UIView {
     
     private var viewModel: HeroViewModel
     
-    private let imageView: UIImageView = {
+    private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .black
         imageView.contentMode = .scaleAspectFill
@@ -16,13 +16,13 @@ class HeroView: UIView {
         return imageView
     }()
     
-    private let bottomGradientContainerView: UIView = {
+    private lazy var bottomGradientContainerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    private let bottomGradientLayer: CAGradientLayer = {
+    private lazy var bottomGradientLayer: CAGradientLayer = {
         let layer = CAGradientLayer()
         layer.colors = [
             UIColor.clear.cgColor,
@@ -32,7 +32,7 @@ class HeroView: UIView {
         return layer
     }()
     
-    private let topGradientLayer: CAGradientLayer = {
+    private lazy var topGradientLayer: CAGradientLayer = {
         let layer = CAGradientLayer()
         layer.colors = [
             UIColor.black.cgColor,
@@ -42,7 +42,7 @@ class HeroView: UIView {
         return layer
     }()
     
-    private let playButton: UIButton = {
+    private lazy var playButton: UIButton = {
         let button = UIButton(type: .system)
         
         let title: String = "Play"
@@ -68,7 +68,7 @@ class HeroView: UIView {
         return button
     }()
     
-    private let downloadButton: UIButton = {
+    private lazy var downloadButton: UIButton = {
         let button = UIButton(type: .system)
         
         let title: String = "Download"
@@ -93,7 +93,7 @@ class HeroView: UIView {
         return button
     }()
     
-    private let aboutButton: UIButton = {
+    private lazy var aboutButton: UIButton = {
         let button = UIButton(type: .system)
         
         let title: String = "More about this Title"
@@ -126,6 +126,14 @@ class HeroView: UIView {
         return button
     }()
     
+    private lazy var buttonsStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [playButton, downloadButton])
+        stackView.axis = .horizontal
+        stackView.spacing = 16
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     var playButtonTapped: ((Title) -> Void)?
     var downloadButtonTapped: ((Title) -> Void)?
     var aboutButtonTapped: ((Title) -> Void)?
@@ -143,9 +151,7 @@ class HeroView: UIView {
         setupButtons()
         
         viewModel.updateView = { [weak self] title in
-            if let path = title.posterPath, let url = URL(string: "\(viewModel.imageRequest.baseURL)/\(path)") {
-                self?.imageView.sd_setImage(with: url, completed: nil)
-            }
+            self?.configureView(with: title)
         }
     }
     
@@ -175,16 +181,6 @@ class HeroView: UIView {
             aboutButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -32),
             aboutButton.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
-        
-        let buttonsStackView = UIStackView(
-            arrangedSubviews: [
-                playButton,
-                downloadButton
-            ]
-        )
-        buttonsStackView.axis = .horizontal
-        buttonsStackView.spacing = 16
-        buttonsStackView.translatesAutoresizingMaskIntoConstraints = false
         
         addSubview(buttonsStackView)
         NSLayoutConstraint.activate([
@@ -231,6 +227,12 @@ class HeroView: UIView {
             aboutButton.addTarget(self, action: #selector(handleAboutButtonTap(_:)), for: .touchUpInside)
         }
         
+    }
+    
+    private func configureView(with model: Title) {
+        if let path = model.posterPath, let url = URL(string: "\(viewModel.imageRequest.baseURL)/\(path)") {
+            self.imageView.sd_setImage(with: url, completed: nil)
+        }
     }
     
     private func playTitle() {
